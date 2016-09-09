@@ -1,4 +1,7 @@
 #include <stdio.h>
+#include <sqlca.h>
+#include <sqlda.h>
+#include <sqlcpr.h>
 
 void
 main()

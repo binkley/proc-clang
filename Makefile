@@ -1,5 +1,7 @@
 CC=gcc
-CFLAGS=-I$$ICSDKHOME/include -Wall
+CFLAGS=-I$(ICSDKHOME)/include -Wall
+LDFLAGS=-L$(ICLIBHOME)
+LDLIBS=-lclntsh
 
 PROC=./proc
 
