@@ -1,6 +1,4 @@
 *.c
-*.gc
-*.gpc
-/.tmp/
+*.lis
 /a
 /procdemo

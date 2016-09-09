@@ -1,0 +1,96 @@
+#!/usr/bin/env bash
+
+export PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
+#set -x
+
+warnings_line='([1-9][0-9]*) warnings generated\.'
+
+function ignore_next {
+    let skip=$1 ; shift
+    for line
+    do
+        : printf 'IGNORING: %s\n' "$line"
+    done
+    for i in $(seq 1 $skip)
+    do
+        IFS='' read -r line
+        : printf 'IGNORING: %s\n' "$line"
+    done
+}
+
+let ignored=0
+let warnings=0
+while IFS= read -r line || [[ -n "$line" ]]
+do
+    case "$line" in
+    *"unused variable 'sqlstm'"* \
+        | *"unused variable 'IAPSUCC'"* \
+        | *"unused variable 'IAPFAIL'"* \
+        | *"unused variable 'IAPFTL'"* )
+        ignore_next 2 "$line"
+        let ++ignored
+        ;;
+    *"passing 'char [512]' to parameter of type 'unsigned char *' converts between pointers to integer types with different sign"* )
+        IFS= read -r line2
+        case $line2 in
+        *'sqlglm(err_msg, &buf_len, &msg_len)'* )
+            ignore_next 4 "$line" "$line2"
+            let ++ignored
+            ;;
+        * )
+            printf '%s\n' "$line"
+            printf '%s\n' "$line2"
+            ;;
+        esac
+        ;;
+    *"field precision should have type 'int', but argument has type 'size_t' (aka 'unsigned long')"* )
+        IFS= read -r line2
+        case $line2 in
+        *'printf("%.*s\n", msg_len, err_msg)'* )
+            ignore_next 1 "$line" "$ine2"
+            let ++ignored
+            ;;
+        * )
+            printf '%s\n' "$line"
+            printf '%s\n' "$line2"
+            ;;
+        esac
+        ;;
+    * ) if [[ $line =~ $warnings_line ]]
+        then
+            let real_warnings=${BASH_REMATCH[1]}
+            let warnings=$((real_warnings - ignored))
+            if (( 0 != $warnings ))
+            then
+                printf '%s\n' "${line/$real_warnings/$warnings}"
+            fi
+        else
+            printf '%s\n' "$line"
+        fi
+        ;;
+    esac
+done < <("$@" 2>&1)
+
+exit $warnings  # Simulate -Werror
+
+# a.c:115:3: error: unused variable 'sqlstm' [-Werror,-Wunused-variable]
+# } sqlstm = {13,1};
+#   ^
+# a.c:127:18: error: unused variable 'IAPSUCC' [-Werror,-Wunused-const-variable]
+# static const int IAPSUCC = 0;
+#                  ^
+# a.c:128:18: error: unused variable 'IAPFAIL' [-Werror,-Wunused-const-variable]
+# static const int IAPFAIL = 1403;
+#                  ^
+# a.c:129:18: error: unused variable 'IAPFTL' [-Werror,-Wunused-const-variable]
+# static const int IAPFTL  = 535;
+#                  ^
+# procdemo.pc:53:12: warning: passing 'char [512]' to parameter of type 'unsigned char *' converts between pointers to integer types with different sign [-Wpointer-sign]
+#     sqlglm(err_msg, &buf_len, &msg_len);
+#            ^~~~~~~
+# /Users/boxley/Downloads/instantclient_12_1/sdk/include/sqlcpr.h:79:35: note: passing argument to parameter here
+# extern void sqlglm( unsigned char*, size_t*, size_t* );
+#                                   ^
+# procdemo.pc:54:15: warning: field precision should have type 'int', but argument has type 'size_t' (aka 'unsigned long') [-Wformat]
+#     printf("%.*s\n", msg_len, err_msg);
+#             ~~^~     ~~~~~~~

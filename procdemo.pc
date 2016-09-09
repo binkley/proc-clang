@@ -5,6 +5,7 @@
  *  fetches the names, salaries, and commissions of all
  *  salespeople, displays the results, then closes the cursor. 
  */ 
+#include "proc-gcc.h"
 
 #include <stdio.h>
 #include <string.h>

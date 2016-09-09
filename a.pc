@@ -1,3 +1,5 @@
+#include "proc-gcc.h"
+
 #include <stdio.h>
 #include <sqlca.h>
 #include <sqlda.h>

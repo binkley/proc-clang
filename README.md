@@ -35,23 +35,8 @@ $ xcode-select --install
 ```
 8. Install llvm from homebrew.  This gets you `clang`, which is superior to
    `gcc`, command-line compatible, and great for lint-y warnings.
-9. Add this to `.pc` source files before any system headers.  `proc` does not
-   like `__attribute__` or know about standard 64-bit integer types.  A pity
-   as it also disables some GCC optimizations:
-```c
-#if defined(ORA_PROC) || !defined(__GNUC__)
-#define __attribute__(x)
-typedef unsigned long long uint64_t;
-typedef long long int64_t;
-#endif
-```
-   The (`Makefile`)[Makefile] does this for you, but it's clearly a band aid.
-10. Install `splint` (a `lint` look-a-like) via Homebrew.
 
 ## If all goes well
-
-(This is *not true*!  I've turned on fail-on-warning for the compiler, and the
-demo program from Oracle fails.  But `a` builds.)
 
 Try:
 ```
