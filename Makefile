@@ -15,13 +15,10 @@ PROGRAMS=a procdemo
 
 all: $(PROGRAMS)
 
-lint: $(PROGRAMS:=.ln)
-
 .PHONY: clean
 clean:
 	$(RM) $(PROGRAMS:%=%.pc.gcc) $(PROGRAMS:%=%.c.gcc) \
-		$(PROGRAMS:%=%.c) $(PROGRAMS:%=%.pc.lis) \
-		$(PROGRAMS:%=%.ln) $(PROGRAMS)
+		$(PROGRAMS:%=%.c) $(PROGRAMS:%=%.pc.lis) $(PROGRAMS)
 
 # Work around proc not groking gcc extensions
 .ONESHELL:

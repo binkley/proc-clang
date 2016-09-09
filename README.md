@@ -62,10 +62,3 @@ $ make clean
 ```
 This means it worked!  However, it also means you have no database connection.
 Win some, lose some.
-
-## Lint
-
-If you'd like a shock, try:
-```
-$ make lint
-```
