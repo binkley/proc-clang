@@ -56,7 +56,7 @@ void sql_error(msg)
     exit(EXIT_FAILURE);
 } 
 
-void main() 
+int main() 
 { 
     struct emp_info *emp_rec_ptr; 
 

@@ -1,6 +1,6 @@
 CC=clang
 CPPFLAGS=-I$(ICSDKHOME)/include
-CFLAGS=-Wall
+CFLAGS=-Wall -Werror
 # -DMAC_OSX -D_GNU_SOURCE -DSLTS_ENABLE -DSLMXMX_ENABLE -D_REENTRANT -DNS_THREADS -DSS_64BIT_SERVER -DORAX86_64 -DBIT64 -DMACHINE64 -DSLS8NATIVE -DSLU8NATIVE -m64 -D_BCERT_API_ -DRSA_PLATFORM=RSA_MAC_X86_64_DARWIN
 LDFLAGS=-L$(ICLIBHOME)
 LDLIBS=-lclntsh
@@ -8,7 +8,7 @@ LDLIBS=-lclntsh
 PROC=./proc
 # Note - if we have a working d/b conn, can add SQLCHECK=FULL to have proc
 # check statements against schemas
-PROCFLAGS=CODE=ANSI_C INCLUDE=$(ICSDKHOME)/include
+PROCFLAGS=CODE=ANSI_C INCLUDE=$(ICSDKHOME)/include LINES=YES
 
 PROGRAMS=a procdemo
 
@@ -16,14 +16,13 @@ all: $(PROGRAMS)
 
 .PHONY: clean
 clean:
-	$(RM) $(PROGRAMS:%=%.pc.gcc) $(PROGRAMS:%=%.c.gcc) \
-		$(PROGRAMS:%=%.c) $(PROGRAMS:%=%.pc.lis) $(PROGRAMS)
+	$(RM) $(PROGRAMS:%=%.gpc) $(PROGRAMS:%=%.gc) \
+		$(PROGRAMS:%=%.c) $(PROGRAMS:%=%.lis) $(PROGRAMS)
 
-# Work around proc not groking gcc extensions
 .ONESHELL:
-%.c: %.pc
+%.gpc: %.pc
 	set -e
-	cat <<-EOH >$<.gcc
+	cat <<-EOH >$@
 	#pragma GCC diagnostic pop
 	#if defined(ORA_PROC) || !defined(__GNUC__)
 	#define __attribute__(x)
@@ -32,13 +31,19 @@ clean:
 	#endif
 	
 	EOH
-	cat $< >>$<.gcc
-	$(PROC) $(PROCFLAGS) INAME=$<.gcc ONAME=$@
-	$(RM) $<.gcc $<.lis
-	cat <<-EOH >$@.gcc
+	cat $< >>$@
+
+.ONESHELL:
+%.gc: %.gpc
+	$(PROC) $(PROCFLAGS) INAME=$< ONAME=$@
+	# Why doesn't .INTERMEDIATE work for this?
+	$(RM) $*.lis
+
+.ONESHELL:
+%.c: %.gc
+	cat <<-EOH >$@
 	#pragma GCC diagnostic push
-	#pragma GCC diagnostic ignored "-Wunused-variable"
+	#pragma GCC diagnostic ignored "-Wall"
 	
 	EOH
-	cat $@ >>$@.gcc
-	mv $@.gcc $@
+	cat $< >>$@

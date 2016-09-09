@@ -50,6 +50,9 @@ typedef long long int64_t;
 
 ## If all goes well
 
+(This is *not true*!  I've turned on fail-on-warning for the compiler, and the
+demo program from Oracle fails.  But `a` builds.)
+
 Try:
 ```
 $ make
