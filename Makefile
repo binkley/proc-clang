@@ -16,12 +16,12 @@ all: $(PROGRAMS)
 
 .PHONY: clean
 clean:
-	$(RM) $(PROGRAMS:%=%.gpc) $(PROGRAMS:%=%.gc) \
-		$(PROGRAMS:%=%.c) $(PROGRAMS:%=%.lis) $(PROGRAMS)
+	$(RM) -r .tmp $(PROGRAMS:%=%.c) $(PROGRAMS:%=%.lis) $(PROGRAMS)
 
 .ONESHELL:
-%.gpc: %.pc
+.tmp/%.pc: %.pc
 	set -e
+	mkdir -p .tmp
 	cat <<-EOH >$@
 	#pragma GCC diagnostic pop
 	#if defined(ORA_PROC) || !defined(__GNUC__)
@@ -30,17 +30,17 @@ clean:
 	typedef long long int64_t;
 	#endif
 	
+	#line 1 "$<"
 	EOH
 	cat $< >>$@
 
 .ONESHELL:
-%.gc: %.gpc
+.tmp/%.c: .tmp/%.pc
 	$(PROC) $(PROCFLAGS) INAME=$< ONAME=$@
-	# Why doesn't .INTERMEDIATE work for this?
-	$(RM) $*.lis
+	$(RM) $*.lis # Why doesn't .INTERMEDIATE work for this?
 
 .ONESHELL:
-%.c: %.gc
+%.c: .tmp/%.c
 	cat <<-EOH >$@
 	#pragma GCC diagnostic push
 	#pragma GCC diagnostic ignored "-Wall"
