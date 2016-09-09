@@ -33,7 +33,9 @@ thing](http://superuser.com/questions/995360/missing-usr-include-in-os-x-el-capi
 ```
 $ xcode-select --install
 ```
-8. Add this to `.pc` source files before any system headers.  `proc` does not
+8. Install llvm from homebrew.  This gets you `clang`, which is superior to
+   `gcc`, command-line compatible, and great for lint-y warnings.
+9. Add this to `.pc` source files before any system headers.  `proc` does not
    like `__attribute__` or know about standard 64-bit integer types.  A pity
    as it also disables some GCC optimizations:
 ```c
@@ -44,7 +46,7 @@ typedef long long int64_t;
 #endif
 ```
    The (`Makefile`)[Makefile] does this for you, but it's clearly a band aid.
-9. Install `splint` (a `lint` look-a-like) via Homebrew.
+10. Install `splint` (a `lint` look-a-like) via Homebrew.
 
 ## If all goes well
 
