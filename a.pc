@@ -1,0 +1,11 @@
+#include <stdio.h>
+
+void
+main()
+{
+    int salary;
+    EXEC SQL SELECT salary INTO :salary
+        FROM Employee
+        WHERE SSN=876543210;
+    printf("The salary is %d\n", a);
+}
