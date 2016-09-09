@@ -58,6 +58,14 @@ $ ./procdemo
 ORACLE error--
 ORA-12162: TNS:net service name is incorrectly specified
 
+$ make clean
 ```
 This means it worked!  However, it also means you have no database connection.
 Win some, lose some.
+
+## Lint
+
+If you'd like a shock, try:
+```
+$ make lint
+```
