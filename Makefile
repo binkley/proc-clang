@@ -7,6 +7,9 @@ LINT=splint
 LINTFLAGS=-I$(ICSDKHOME)/include
 
 PROC=./proc
+# Note - if we have a working d/b conn, can add SQLCHECK=FULL to have proc
+# check statements against schemas
+PROCFLAGS=CODE=ANSI_C INCLUDE=$(ICSDKHOME)/include
 
 PROGRAMS=a procdemo
 
@@ -16,13 +19,16 @@ lint: $(PROGRAMS:=.ln)
 
 .PHONY: clean
 clean:
-	$(RM) $(PROGRAMS:%=%.pc.gcc) $(PROGRAMS:%=%.c) \
-		$(PROGRAMS:%=%.pc.lis) $(PROGRAMS:%=%.ln) $(PROGRAMS)
+	$(RM) $(PROGRAMS:%=%.pc.gcc) $(PROGRAMS:%=%.c.gcc) \
+		$(PROGRAMS:%=%.c) $(PROGRAMS:%=%.pc.lis) \
+		$(PROGRAMS:%=%.ln) $(PROGRAMS)
 
 # Work around proc not groking gcc extensions
 .ONESHELL:
 %.c: %.pc
+	set -e
 	cat <<-EOH >$<.gcc
+	#pragma GCC diagnostic pop
 	#if defined(ORA_PROC) || !defined(__GNUC__)
 	#define __attribute__(x)
 	typedef unsigned long long uint64_t;
@@ -31,5 +37,12 @@ clean:
 	
 	EOH
 	cat $< >>$<.gcc
-	$(PROC) INAME=$<.gcc ONAME=$@ INCLUDE=$$ICSDKHOME/include &&
+	$(PROC) $(PROCFLAGS) INAME=$<.gcc ONAME=$@
 	$(RM) $<.gcc $<.lis
+	cat <<-EOH >$@.gcc
+	#pragma GCC diagnostic push
+	#pragma GCC diagnostic ignored "-Wunused-variable"
+	
+	EOH
+	cat $@ >>$@.gcc
+	mv $@.gcc $@

@@ -3,7 +3,7 @@
 #include <sqlda.h>
 #include <sqlcpr.h>
 
-void
+int
 main()
 {
     int salary;
@@ -11,4 +11,5 @@ main()
         FROM Employee
         WHERE SSN=876543210;
     printf("The salary is %d.\n", salary);
+    return 0;
 }
