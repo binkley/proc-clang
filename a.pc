@@ -7,5 +7,5 @@ main()
     EXEC SQL SELECT salary INTO :salary
         FROM Employee
         WHERE SSN=876543210;
-    printf("The salary is %d\n", a);
+    printf("The salary is %d\n", salary);
 }

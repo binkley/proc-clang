@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+ic_home=$HOME/Downloads/instantclient_12_1
+while getopts :I:-: opt
+do
+    [[ - == $opt ]] && opt=${OPTARG%%=*} OPTARG=${OPTARG#*=}
+    case $opt in
+    I | instant-client-home ) ic_home=$OPTARG ;;
+    esac
+done
+shift $((OPTIND - 1))
+
+export ICLIBHOME=$ic_home
+export ICSDKHOME=$ic_home/sdk
+export LD_LIBRARY_PATH=$ICLIBHOME:$LD_LIBRARY_PATH
+export PATH=$ICSDKHOME:$PATH
+
+exec $ICSDKHOME/proc "$@"
