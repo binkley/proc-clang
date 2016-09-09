@@ -1,5 +1,6 @@
 CC=gcc
 CFLAGS=-I$(ICSDKHOME)/include -Wall
+# -DMAC_OSX -D_GNU_SOURCE -DSLTS_ENABLE -DSLMXMX_ENABLE -D_REENTRANT -DNS_THREADS -DSS_64BIT_SERVER -DORAX86_64 -DBIT64 -DMACHINE64 -DSLS8NATIVE -DSLU8NATIVE -m64 -D_BCERT_API_ -DRSA_PLATFORM=RSA_MAC_X86_64_DARWIN
 LDFLAGS=-L$(ICLIBHOME)
 LDLIBS=-lclntsh
 LINT=splint
@@ -19,7 +20,6 @@ clean:
 		$(PROGRAMS:%=%.pc.lis) $(PROGRAMS:%=%.ln) $(PROGRAMS)
 
 # Work around proc not groking gcc extensions
-.INTERMEDIATE: %.lis
 .ONESHELL:
 %.c: %.pc
 	cat <<-EOH >$<.gcc
@@ -32,4 +32,4 @@ clean:
 	EOH
 	cat $< >>$<.gcc
 	$(PROC) INAME=$<.gcc ONAME=$@ INCLUDE=$$ICSDKHOME/include &&
-	$(RM) $<.gcc
+	$(RM) $<.gcc $<.lis
