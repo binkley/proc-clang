@@ -1,5 +1,7 @@
 # Proc*C experiment
 
+## Setup on MacOS
+
 1. Download from
    http://www.oracle.com/technetwork/topics/precomp-112010-084940.html
 2. Download from
@@ -21,32 +23,41 @@ $ export LD_LIBRARY_PATH=$ICLIBHOME
 cd $ICLIBHOME
 ln -s libclntsh.dylib.12.1 libclntsh.so
 ```
-6. Install MacOS command-line tools.  By default XCode does not install
+6. Similarly export `PATH` to include `$IC/sdk`.  The same advice for a
+   wrapper script or subshell applies.  After steps #6 and #7 the
+   (`proc`)[proc] wrapper script.
+7. Install MacOS command-line tools.  By default XCode does not install
    command line tools, and `proc` cannot find `/usr/include` otherwise.  This
    is [an El Capitan
 thing](http://superuser.com/questions/995360/missing-usr-include-in-os-x-el-capitan):
 ```
 $ xcode-select --install
 ```
-7. Optionally edit `$IC/precomp/admin/pcscfg.cfg` and add or edit this
-   line, else `proc` will blow up complaining about GCC extensions found in
-   `/usr/include`:
-```
-parse=PARTIAL
-```
-   *CAVEAT* -- However this breaks some simple cases such as local variables
-   used to receive data from Oracle.  The alternative is to leave `parse` at
-   its default ("FULL") and lie to `proc` about the compiler.  Include this at
-   the top of "C" source files before including any system headers.  A pity it
-   also disables some GCC optimizations:
+8. Add this to `.pc` source files before any system headers.  `proc` does not
+   like `__attribute__` or know about standard 64-bit integer types.  A pity
+   as it also disables some GCC optimizations:
 ```c
-#ifdef ORA_PROC
-# define __attribute__(x)
+#if defined(ORA_PROC) || !defined(__GNUC__)
+#define __attribute__(x)
+typedef unsigned long long uint64_t;
+typedef long long int64_t;
 #endif
 ```
-8. Similarly export `PATH` to include `$IC/sdk`.  The same advice for a
-   wrapper script or subshell applies.  After steps #6 and #7 the
-   (`proc`)[proc] wrapper script.
+   The (`Makefile`)[Makefile] does this for you, but it's clearly a band aid.
 9. Install `splint` (a `lint` look-a-like) via Homebrew.
-10. There is a convenient (`Makefile`)[Makefile] which turns a Pro*C source
-    file into an executable of the same basename.
+
+## If all goes well
+
+Try:
+```
+$ make
+$ ./a
+The salary is 0.
+$ ./procdemo
+
+ORACLE error--
+ORA-12162: TNS:net service name is incorrectly specified
+
+```
+This means it worked!  However, it also means you have no database connection.
+Win some, lose some.

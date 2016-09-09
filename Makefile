@@ -11,7 +11,7 @@ all: $(PROGRAMS)
 
 .PHONY: clean
 clean:
-	$(RM) *.c *.lis *.gc $(PROGRAMS)
+	$(RM) *.pc.gcc *.c *.lis $(PROGRAMS)
 
 # Work around proc not groking gcc extensions
 .ONESHELL:
