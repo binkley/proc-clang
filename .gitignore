@@ -1,2 +1,5 @@
-*.pc.gcc
-*.lis
+*.c
+*.gc
+*.gpc
+/a
+/procdemo
