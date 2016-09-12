@@ -28,4 +28,4 @@ ifndef ICLIBHOME
 endif
 	set -e
 	$(PROC) $(PROCFLAGS) INAME=$< ONAME=$@
-	$(RM) $*.lis # Why doesn't .INTERMEDIATE work for this?
+	$(RM) $*.lis

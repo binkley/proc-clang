@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+set -e
+set -o pipefail
+
 : "${ICLIBHOME:?ICLIBHOME undefined}"
 : "${ICSDKHOME:?ICSDKHOME undefined}"
 
