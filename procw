@@ -6,4 +6,5 @@
 export LD_LIBRARY_PATH=$ICLIBHOME:$LD_LIBRARY_PATH
 export PATH=$ICSDKHOME:$PATH
 
-exec $ICSDKHOME/proc "$@"
+# Skip the banner
+$ICSDKHOME/proc "$@" | sed 1,7d

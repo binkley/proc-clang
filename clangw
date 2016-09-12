@@ -21,8 +21,9 @@ function ignore_next {
 # Turn on clang color output when talking to a terminal, same behavior
 if [[ -t 1 ]]
 then
-    clang=$1 ; shift
-    set -- $clang -fcolor-diagnostics "$@"
+    set -- clang -fcolor-diagnostics "$@"
+else
+    set -- clang "$@"
 fi
 
 let ignored=0
