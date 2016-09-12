@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+: "${ICLIBHOME:?ICLIBHOME undefined}"
+: "${ICSDKHOME:?ICSDKHOME undefined}"
+
 export LD_LIBRARY_PATH=$ICLIBHOME:$LD_LIBRARY_PATH
 export PATH=$ICSDKHOME:$PATH
 
