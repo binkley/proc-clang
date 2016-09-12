@@ -9,5 +9,18 @@ set -o pipefail
 export LD_LIBRARY_PATH=$ICLIBHOME:$LD_LIBRARY_PATH
 export PATH=$ICSDKHOME:$PATH
 
+# Emulate behavior w.r.t. source file
+
+for arg
+do
+    case $arg in
+    *=* ) case ${arg%%=*} in
+        [iI][nN][aA][mM][eE] ) source=${arg#*=} ; break ;;
+        esac ;;
+    * ) source=$arg ; break ;;
+    esac
+done
+
 # Skip the banner
 $ICSDKHOME/proc "$@" | sed 1,7d
+rm -f ${source%.pc}.lis

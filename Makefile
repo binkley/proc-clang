@@ -21,11 +21,8 @@ clean:
 
 # TODO: If *.c already made, but env is wrong, this does not catch
 # the issue
-.ONESHELL:
 %.c: %.pc
 ifndef ICLIBHOME
 	$(error ICLIBHOME undefined)
 endif
-	set -e
 	$(PROC) $(PROCFLAGS) INAME=$< ONAME=$@
-	$(RM) $*.lis
