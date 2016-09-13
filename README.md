@@ -29,7 +29,7 @@ $ export LD_LIBRARY_PATH=$ICLIBHOME  # Needed to run, but not to build
 
    ```
 cd $ICLIBHOME
-ln -s libclntsh.dylib.12.1 libclntsh.so
+ln -s libclntsh.dylib.12.1 libclntsh.dylib
 ```
 
 6. Install MacOS command-line tools.  By default XCode does not install
