@@ -18,12 +18,16 @@ function ignore_next {
     done
 }
 
+# Pick correctly between `clang` and `clang++`
+clang=${0##*/}
+clang=${clang/w/}
+
 # Turn on clang color output when talking to a terminal, same behavior
 if [[ -t 1 ]]
 then
-    set -- clang -fcolor-diagnostics "$@"
+    set -- $clang -fcolor-diagnostics "$@"
 else
-    set -- clang "$@"
+    set -- $clang "$@"
 fi
 
 let ignored=0

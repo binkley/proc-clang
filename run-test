@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+
+export PS4='+${BASH_SOURCE}:${LINENO}: ${FUNCNAME[0]:+${FUNCNAME[0]}(): } '
+
+function setup_colors()
+{
+    local -r ncolors=$(tput colors)
+    [[ -n "$ncolors" && ncolors -ge 8 ]] || return
+    readonly pgreen=$(printf "\e[32m")
+    readonly pred=$(printf "\e[31m")
+    readonly pboldred=$(printf "\e[31;1m")
+    readonly preset=$(printf "\e[0m")
+}
+[[ -t 1 ]] && setup_colors
+
+let passed=0 failed=0 errored=0
+function tally {
+    local -r e=$1
+    $tallied && return $e
+    tallied=true
+    case $e in
+    0 ) let ++passed ;;
+    1 ) let ++failed ;;
+    * ) let ++errored ;;
+    esac
+    _print_result $e
+    return $e
+}
+
+for t
+do
+    echo "${pbold}Script $t:${preset}"
+    let last_passed=$passed
+    let last_failed=$failed
+    let last_errored=$errored
+    $t
+    let t_passed=$((passed - last_passed))
+    let t_failed=$((failed - last_failed))
+    let t_errored=$((errored - last_errored))
+    all=()
+    (( 0 == t_errored )) || all+=("$t_errored errored")
+    (( 0 == t_failed )) || all+=("$t_failed failed")
+    (( 0 == t_passed )) || all+=("$t_passed passed")
+    IFS=, eval 's="${all[*]}"'
+    echo "${s//,/, }"
+done
+
+cat <<EOS
+${pbold}Summary${preset}: ${pgreen}$passed PASSED${preset}, ${pred}$failed FAILED${preset}, ${pboldred}$errored ERRORED${preset}
+EOS
+
+if (( 0 < errored ))
+then
+    exit 2
+elif (( 0 < failed ))
+then
+    exit 1
+else
+    exit 0
+fi
