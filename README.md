@@ -15,16 +15,8 @@
    as `ICLIBHOME` (e.g., `/tmp/instantclient_12_1`) and the `sdk` directory
    within as `ICSDKHOME`.
 
-4. Export these:
-
-   ```
-$ export ICLIBHOME=...  # Needed to build
-$ export ICSDKHOME=$ICLIBHOME/sdk  # Needed to build
-$ export LD_LIBRARY_PATH=$ICLIBHOME  # Needed to run, but not to build
-```
-
-5. Fix the library names.  This is so the compiler tool chain can link without
-   too much pain (the alternative involves various hard-coding hacks in
+4. Fix the library name.  This is so the compiler tool chain can link without
+   too much pain (the alternative involves various hard-coding version in
    `Makefile`):
 
    ```
@@ -32,7 +24,18 @@ cd $ICLIBHOME
 ln -s libclntsh.dylib.12.1 libclntsh.dylib
 ```
 
-6. Install MacOS command-line tools.  By default XCode does not install
+5. Download gtest 1.8.0 (by tag) from:
+   https://github.com/google/googletest/tree/master
+
+6. Install `cmake` with homebrew.
+
+7. Build gtest libraries with:
+
+   ```
+CC=$(which clang) CXX=$(which clang++) cmake BUILD_SHARED_LIBS=ON
+```
+
+8. Install MacOS command-line tools.  By default XCode does not install
    command line tools, and `proc` cannot find `/usr/include` and friends.  This
    is [an El Capitan
 thing](http://superuser.com/questions/995360/missing-usr-include-in-os-x-el-capitan):
@@ -41,10 +44,19 @@ thing](http://superuser.com/questions/995360/missing-usr-include-in-os-x-el-capi
 $ xcode-select --install
 ```
 
-7. Install llvm from homebrew.  This gets you `clang`, which is superior to
+9. Install llvm from homebrew.  This gets you `clang`, which is superior to
    `gcc`, command-line compatible, and great for lint-y warnings.  It is also
    what newer versions of XLC (IBM's compiler) are based on, although SWMS is
    using a much older pre-clang version of XLC.
+
+10. Export these:
+
+    ```
+$ export ICLIBHOME=...  # Needed to build
+$ export ICSDKHOME=$ICLIBHOME/sdk  # Needed to build
+$ export GTEST_HOME=...  # Needed to build tests
+$ export LD_LIBRARY_PATH=$ICLIBHOME:$GTEST_HOME  # Needed to run, but not to build
+```
 
 ## If all goes well
 
