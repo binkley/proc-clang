@@ -32,19 +32,12 @@ function tally {
 for t
 do
     echo "${pbold}Script $t:${preset}"
-    let last_passed=$passed
-    let last_failed=$failed
-    let last_errored=$errored
     $t
-    let t_passed=$((passed - last_passed))
-    let t_failed=$((failed - last_failed))
-    let t_errored=$((errored - last_errored))
-    all=()
-    (( 0 == t_errored )) || all+=("$t_errored errored")
-    (( 0 == t_failed )) || all+=("$t_failed failed")
-    (( 0 == t_passed )) || all+=("$t_passed passed")
-    IFS=, eval 's="${all[*]}"'
-    echo "${s//,/, }"
+    case $? in
+    0 ) let ++passed ;;
+    1 ) let ++failed ;;
+    * ) let ++errored ;;
+    esac
 done
 
 cat <<EOS
