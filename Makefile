@@ -19,7 +19,7 @@ check: oracle-login-test
 
 .PHONY: clean
 clean:
-	$(RM) procdemo.c emp-info.c sql-error.c procdemo oracle-login-test *.o *.lis
+	$(RM) procdemo.c emp-info.c sql-error.c oracle-login.c print-salesmen.c procdemo oracle-login-test *.o *.lis
 
 procdemo: LDFLAGS+=-L$(GTEST_HOME)
 procdemo: LDLIBS+=-lgtest -lgtest_main
