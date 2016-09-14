@@ -36,8 +36,7 @@ struct emp_info
     float      commission; 
 }; 
 
-void sql_error(msg) 
-    char *msg;
+void sql_error(const char *msg) 
 { 
     char err_msg[512];
     size_t buf_len, msg_len;
