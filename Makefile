@@ -23,11 +23,11 @@ clean:
 
 procdemo: LDFLAGS+=-L$(GTEST_HOME)
 procdemo: LDLIBS+=-lgtest -lgtest_main
-procdemo: procdemo.o emp-info.o sql-error.o
+procdemo: procdemo.o emp-info.o sql-error.o oracle-login.o
 
 procdemo-test: LDFLAGS+=-L$(GTEST_HOME)
 procdemo-test: LDLIBS+=-lgtest -lgtest_main
-procdemo-test: procdemo-test.o emp-info.o sql-error.o
+procdemo-test: procdemo-test.o emp-info.o sql-error.o oracle-login.o
 
 %.c: %.pc
 ifndef ICLIBHOME

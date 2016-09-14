@@ -9,34 +9,18 @@
  */
 #include <stdio.h>
 #include <string.h>
-#include <sqlca.h>
 #include <stdlib.h>
+
 #include <sqlda.h>
-#include <sqlcpr.h>
 
 #include "emp-info.h"
 #include "sql-error.h"
+#include "oracle-login.h"
 
-int main()
+int
+main()
 {
-    struct emp_info *emp_rec_ptr;
-
-/* Allocate memory for emp_info struct. */
-    if ((emp_rec_ptr =
-        (struct emp_info *) malloc(sizeof(struct emp_info))) == 0)
-    {
-        fprintf(stderr, "Memory allocation error.\n");
-        exit(EXIT_FAILURE);
-    }
-
-/* Connect to ORACLE. */
-    strcpy(username, "scott");
-    strcpy(password, "tiger");
-
-    EXEC SQL WHENEVER SQLERROR DO sql_error("ORACLE error--");
-
-    EXEC SQL CONNECT :username IDENTIFIED BY :password;
-    printf("\nConnected to ORACLE as user: %s\n", username);
+    struct emp_info *emp_rec_ptr = oracle_login("scott", "tiger");
 
 /* Declare the cursor. All static SQL explicit cursors
  * contain SELECT commands. 'salespeople' is a SQL identifier,
@@ -74,6 +58,9 @@ int main()
     printf("\nGOOD-BYE!!\n\n");
 
     EXEC SQL COMMIT WORK RELEASE;
+
+    free(emp_rec_ptr);
+
     exit(EXIT_SUCCESS);
 }
 
