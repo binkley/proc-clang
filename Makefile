@@ -17,7 +17,7 @@ all: $(PROGRAMS)
 
 .PHONY: check
 check: $(PROGRAMS:%=%-test)
-	set -e ; for t in $^ ; do ./$$t ; done
+	./run-test ${^:%=./%}
 
 .PHONY: clean
 clean:
