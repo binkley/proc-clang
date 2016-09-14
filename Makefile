@@ -15,31 +15,45 @@ PROGRAMS=a procdemo
 
 all: $(PROGRAMS)
 
-ifndef GTEST_HOME
-	$(error GTEST_HOME undefined)
-endif
-
-# Why can't I build a-test.o directly?
-%-test.o: CPPFLAGS += -I. -I$(GTEST_HOME)/include
-%-test.o: %.c %-test.cc
-	$(COMPILE.cc) $(OUTPUT_OPTION) $*-test.cc
-%-test: CPPFLAGS += -I. -I$(GTEST_HOME)/include
-%-test: LDFLAGS += -L$(GTEST_HOME)
-%-test: LDLIBS += -lgtest -lgtest_main
-%-test: %.c %-test.cc
-	$(LINK.cc) $*-test.cc $(LOADLIBES) $(LDLIBS) -o $@
-
+.PHONY: check
 check: $(PROGRAMS:%=%-test)
-	./run-test $^
+	set -e ; for t in $^ ; do ./$$t ; done
 
 .PHONY: clean
 clean:
-	$(RM) $(PROGRAMS:%=%.c) $(PROGRAMS:%=%.lis) *.o $(PROGRAMS) $(PROGRAMS:%=%-test)
+	$(RM) $(PROGRAMS:%=%.c) $(PROGRAMS) $(PROGRAMS:%=%-test) *.o *.lis
 
-# TODO: If *.c already made, but env is wrong, this does not catch
-# the issue
 %.c: %.pc
 ifndef ICLIBHOME
 	$(error ICLIBHOME undefined)
 endif
+ifndef ICSDKHOME
+	$(error ICSDKHOME undefined)
+endif
 	$(PROC) $(PROCFLAGS) INAME=$< ONAME=$@
+
+# TODO: Why do I need to flag as intermediate?
+.INTERMEDIATE: a.c a-test.o
+a-test.o: CPPFLAGS+=-I$(GTEST_HOME)/include
+a-test.o: a.c a-test.cc
+ifndef GTEST_HOME
+	$(error GTEST_HOME undefined)
+endif
+.INTERMEDIATE: procdemo.c procdemo-test.o
+procdemo-test.o: CPPFLAGS+=-I$(GTEST_HOME)/include
+procdemo-test.o: procdemo.c procdemo-test.cc
+ifndef GTEST_HOME
+	$(error GTEST_HOME undefined)
+endif
+
+# TODO: Why isn't this working with pattern rules?
+%-test.o: CPPFLAGS+=-I$(GTEST_HOME)/include
+%-test.o: %.c %-test.cc
+ifndef GTEST_HOME
+	$(error GTEST_HOME undefined)
+endif
+	$(COMPILE.cc) $(OUTPUT_OPTION) $*-test.cc
+
+%-test: LDFLAGS+=-L$(GTEST_HOME)
+%-test: LDLIBS+=-lgtest -lgtest_main
+%-test: %-test.o

@@ -1,4 +1,7 @@
 *.c
 *.lis
+*.o
 /a
+/a-test
 /procdemo
+/procdemo-test

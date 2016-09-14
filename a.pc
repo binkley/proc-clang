@@ -5,8 +5,7 @@
 #include <sqlda.h>
 #include <sqlcpr.h>
 
-int
-main()
+int main(void)
 {
     int salary;
     EXEC SQL SELECT salary INTO :salary

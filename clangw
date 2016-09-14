@@ -30,6 +30,18 @@ else
     set -- $clang "$@"
 fi
 
+# Use temp files - process substituion loses the exit code of clang
+trap 'rm -f $tmp' EXIT
+tmp=$(mktemp 2>/dev/null || mktemp -t ${0##*/})
+
+"$@" >$tmp 2>&1
+let clang_exit=$?
+if (( 0 != $clang_exit ))
+then
+    cat $tmp
+    exit $clang_exit
+fi
+
 let ignored=0
 let warnings=0
 while IFS= read -r line || [[ -n "$line" ]]
@@ -38,7 +50,8 @@ do
     *"unused variable 'sqlstm'"* \
         | *"unused variable 'IAPSUCC'"* \
         | *"unused variable 'IAPFAIL'"* \
-        | *"unused variable 'IAPFTL'"* )
+        | *"unused variable 'IAPFTL'"* \
+        | *"conversion from string literal to 'char *' is deprecated"* )
         ignore_next 2 "$line"
         let ++ignored
         ;;
@@ -81,28 +94,6 @@ do
         fi
         ;;
     esac
-done < <("$@" 2>&1)
+done <$tmp
 
 exit $warnings  # Simulate -Werror
-
-# a.c:115:3: error: unused variable 'sqlstm' [-Werror,-Wunused-variable]
-# } sqlstm = {13,1};
-#   ^
-# a.c:127:18: error: unused variable 'IAPSUCC' [-Werror,-Wunused-const-variable]
-# static const int IAPSUCC = 0;
-#                  ^
-# a.c:128:18: error: unused variable 'IAPFAIL' [-Werror,-Wunused-const-variable]
-# static const int IAPFAIL = 1403;
-#                  ^
-# a.c:129:18: error: unused variable 'IAPFTL' [-Werror,-Wunused-const-variable]
-# static const int IAPFTL  = 535;
-#                  ^
-# procdemo.pc:53:12: warning: passing 'char [512]' to parameter of type 'unsigned char *' converts between pointers to integer types with different sign [-Wpointer-sign]
-#     sqlglm(err_msg, &buf_len, &msg_len);
-#            ^~~~~~~
-# /Users/boxley/Downloads/instantclient_12_1/sdk/include/sqlcpr.h:79:35: note: passing argument to parameter here
-# extern void sqlglm( unsigned char*, size_t*, size_t* );
-#                                   ^
-# procdemo.pc:54:15: warning: field precision should have type 'int', but argument has type 'size_t' (aka 'unsigned long') [-Wformat]
-#     printf("%.*s\n", msg_len, err_msg);
-#             ~~^~     ~~~~~~~

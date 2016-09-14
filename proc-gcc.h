@@ -2,4 +2,11 @@
 #define __attribute__(x)
 typedef unsigned long long uint64_t;
 typedef long long int64_t;
+#ifdef __cplusplus
+extern "C" {
+#endif
+    void sql_error(char *msg);
+#ifdef __cplusplus
+}
+#endif
 #endif

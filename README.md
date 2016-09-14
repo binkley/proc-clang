@@ -63,6 +63,7 @@ $ export LD_LIBRARY_PATH=$ICLIBHOME:$GTEST_HOME  # Needed to run, but not to bui
 Try:
 ```
 $ make
+$ make check
 $ ./a
 The salary is 0.
 $ ./procdemo
