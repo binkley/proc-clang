@@ -23,6 +23,9 @@ check: $(PROGRAMS:%=%-test)
 clean:
 	$(RM) $(PROGRAMS:%=%.c) $(PROGRAMS) $(PROGRAMS:%=%-test) *.o *.lis
 
+procdemo: procdemo.o emp-info.o
+procdemo-test: procdemo-test.o emp-info.o
+
 %.c: %.pc
 ifndef ICLIBHOME
 	$(error ICLIBHOME undefined)
@@ -32,7 +35,6 @@ ifndef ICSDKHOME
 endif
 	$(PROC) $(PROCFLAGS) INAME=$< ONAME=$@
 
-.INTERMEDIATE: procdemo.c procdemo-test.o
 procdemo-test.o: CPPFLAGS+=-I$(GTEST_HOME)/include
 procdemo-test.o: procdemo.c procdemo-test.cc
 ifndef GTEST_HOME

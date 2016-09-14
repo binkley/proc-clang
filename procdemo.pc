@@ -14,27 +14,7 @@
 #include <sqlda.h>
 #include <sqlcpr.h>
 
-#define UNAME_LEN      20 
-#define PWD_LEN        11 
- 
-/*
- * Use the precompiler typedef'ing capability to create
- * null-terminated strings for the authentication host
- * variables. (This isn't really necessary--plain char *'s
- * would work as well. This is just for illustration.)
- */
-typedef char asciiz[PWD_LEN]; 
-
-EXEC SQL TYPE asciiz IS CHARZ(PWD_LEN) REFERENCE; 
-asciiz     username; 
-asciiz     password; 
-
-struct emp_info 
-{ 
-    asciiz     emp_name; 
-    float      salary; 
-    float      commission; 
-}; 
+#include "emp-info.h"
 
 void sql_error(const char *msg) 
 { 

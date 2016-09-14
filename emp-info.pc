@@ -1,0 +1,5 @@
+#include "emp-info.h"
+
+EXEC SQL TYPE asciiz IS CHARZ(PWD_LEN) REFERENCE; 
+asciiz     username; 
+asciiz     password; 
