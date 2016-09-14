@@ -45,4 +45,4 @@ function filter_diagnostics {
 }
 
 # Only diagnostics to to stderr: swap out/err to filter; swap back to print
-("$@" 3>&1- 1>&2- 2>&3- | filter_diagnostics) 3>&1- 1>&2 2>&3-
+"$@" 3>&1- 1>&2- 2>&3- | filter_diagnostics 3>&1- 1>&2 2>&3-
