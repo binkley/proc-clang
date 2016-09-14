@@ -11,7 +11,7 @@ PROC=./procw
 # check statements against schemas
 PROCFLAGS=CODE=ANSI_C INCLUDE=$(ICSDKHOME)/include LINES=YES
 
-PROGRAMS=a procdemo
+PROGRAMS=procdemo
 
 all: $(PROGRAMS)
 
@@ -32,27 +32,12 @@ ifndef ICSDKHOME
 endif
 	$(PROC) $(PROCFLAGS) INAME=$< ONAME=$@
 
-# TODO: Why do I need to flag as intermediate?
-.INTERMEDIATE: a.c a-test.o
-a-test.o: CPPFLAGS+=-I$(GTEST_HOME)/include
-a-test.o: a.c a-test.cc
-ifndef GTEST_HOME
-	$(error GTEST_HOME undefined)
-endif
 .INTERMEDIATE: procdemo.c procdemo-test.o
 procdemo-test.o: CPPFLAGS+=-I$(GTEST_HOME)/include
 procdemo-test.o: procdemo.c procdemo-test.cc
 ifndef GTEST_HOME
 	$(error GTEST_HOME undefined)
 endif
-
-# TODO: Why isn't this working with pattern rules?
-%-test.o: CPPFLAGS+=-I$(GTEST_HOME)/include
-%-test.o: %.c %-test.cc
-ifndef GTEST_HOME
-	$(error GTEST_HOME undefined)
-endif
-	$(COMPILE.cc) $(OUTPUT_OPTION) $*-test.cc
 
 %-test: LDFLAGS+=-L$(GTEST_HOME)
 %-test: LDLIBS+=-lgtest -lgtest_main
