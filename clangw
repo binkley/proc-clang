@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Edit for symbols produced by Pro*C but not consumed by code
+unused_variables=(IAPFAIL IAPSUCC IAPFTL sqladt sqlctx sqlcud0 sqlfpn sqlstm sqltds)
+
 set -o pipefail
 set -o functrace
 
@@ -13,31 +16,29 @@ clang=${clang/w/}
 [[ -t 1 ]] && set -- $clang -fcolor-diagnostics "$@" || set -- $clang "$@"
 
 function filter_diagnostics {
+    IFS='|' ignored_warning="unused variable '(${unused_variables[*]})'"
     local -r warnings_line='([1-9][0-9]*) warnings generated\.'
     let warnings=0
 
     while IFS= read -r line || [[ -n "$line" ]]
     do
-        case "$line" in
-        *"unused variable 'sqlstm'"* \
-            | *"unused variable 'IAPSUCC'"* \
-            | *"unused variable 'IAPFAIL'"* \
-            | *"unused variable 'IAPFTL'"* )
-            read ; read # Skip next 2
+        if [[ $line =~ $ignored_warning ]]
+        then
+            read ; read  # Skip next 2
             let ++ignored
-            ;;
-        * ) if ! [[ $line =~ $warnings_line ]]
-            then
-                printf '%s\n' "$line"
-                continue
-            fi
+            continue
+        fi
 
-            let real_warnings=${BASH_REMATCH[1]}
-            let warnings=$((real_warnings - ignored))
-            (( 0 == warnings )) && continue
-            printf '%s\n' "${line/$real_warnings /$warnings /}"
-            ;;
-        esac
+        if ! [[ $line =~ $warnings_line ]]
+        then
+            printf '%s\n' "$line"
+            continue
+        fi
+
+        let real_warnings=${BASH_REMATCH[1]}
+        let warnings=$((real_warnings - ignored))
+        (( 0 == warnings )) && continue
+        printf '%s\n' "${line/$real_warnings /$warnings /}"
     done
 
     return $warnings  # Simulate -Werror
