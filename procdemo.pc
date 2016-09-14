@@ -15,26 +15,7 @@
 #include <sqlcpr.h>
 
 #include "emp-info.h"
-
-void sql_error(const char *msg) 
-{ 
-    char err_msg[512];
-    size_t buf_len, msg_len;
-
-    EXEC SQL WHENEVER SQLERROR CONTINUE;
-
-    printf("\n%s\n", msg);
-
-/* Call sqlglm() to get the complete text of the
- * error message.
- */
-    buf_len = sizeof (err_msg);
-    sqlglm((unsigned char *) err_msg, &buf_len, &msg_len);
-    printf("%.*s\n", (int) msg_len, err_msg);
-
-    EXEC SQL ROLLBACK RELEASE;
-    exit(EXIT_FAILURE);
-} 
+#include "sql-error.h"
 
 int main() 
 { 
