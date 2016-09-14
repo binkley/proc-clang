@@ -1,5 +1,5 @@
 extern "C" {
-#include "procdemo.c"
+#include "oracle-login.c"
 }
 
 #include <gtest/gtest.h>

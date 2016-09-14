@@ -14,20 +14,20 @@ PROCFLAGS=CODE=ANSI_C INCLUDE=$(ICSDKHOME)/include LINES=YES
 all: procdemo
 
 .PHONY: check
-check: procdemo-test
+check: oracle-login-test
 	./run-test ${^:%=./%}
 
 .PHONY: clean
 clean:
-	$(RM) procdemo.c emp-info.c sql-error.c procdemo procdemo-test *.o *.lis
+	$(RM) procdemo.c emp-info.c sql-error.c procdemo oracle-login-test *.o *.lis
 
 procdemo: LDFLAGS+=-L$(GTEST_HOME)
 procdemo: LDLIBS+=-lgtest -lgtest_main
 procdemo: procdemo.o emp-info.o sql-error.o oracle-login.o print-salesmen.o
 
-procdemo-test: LDFLAGS+=-L$(GTEST_HOME)
-procdemo-test: LDLIBS+=-lgtest -lgtest_main
-procdemo-test: procdemo-test.o emp-info.o sql-error.o oracle-login.o print-salesmen.o
+oracle-login-test: LDFLAGS+=-L$(GTEST_HOME)
+oracle-login-test: LDLIBS+=-lgtest -lgtest_main
+oracle-login-test: oracle-login-test.o emp-info.o sql-error.o print-salesmen.o
 
 %.c: %.pc
 ifndef ICLIBHOME
@@ -40,8 +40,8 @@ endif
 
 procdemo.o: procdemo.c oracle-login.h print-salesmen.h
 
-procdemo-test.o: CPPFLAGS+=-I$(GTEST_HOME)/include
-procdemo-test.o: procdemo.c procdemo-test.cc oracle-login.h print-salesmen.h
+oracle-login-test.o: CPPFLAGS+=-I$(GTEST_HOME)/include
+oracle-login-test.o: oracle-login.c oracle-login-test.cc
 ifndef GTEST_HOME
 	$(error GTEST_HOME undefined)
 endif
