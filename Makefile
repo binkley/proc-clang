@@ -23,11 +23,11 @@ clean:
 
 procdemo: LDFLAGS+=-L$(GTEST_HOME)
 procdemo: LDLIBS+=-lgtest -lgtest_main
-procdemo: procdemo.o emp-info.o sql-error.o oracle-login.o
+procdemo: procdemo.o emp-info.o sql-error.o oracle-login.o print-salesmen.o
 
 procdemo-test: LDFLAGS+=-L$(GTEST_HOME)
 procdemo-test: LDLIBS+=-lgtest -lgtest_main
-procdemo-test: procdemo-test.o emp-info.o sql-error.o oracle-login.o
+procdemo-test: procdemo-test.o emp-info.o sql-error.o oracle-login.o print-salesmen.o
 
 %.c: %.pc
 ifndef ICLIBHOME
@@ -38,10 +38,10 @@ ifndef ICSDKHOME
 endif
 	$(PROC) $(PROCFLAGS) INAME=$< ONAME=$@
 
-procdemo.o: procdemo.c emp-info.h sql-error.h
+procdemo.o: procdemo.c oracle-login.h print-salesmen.h
 
 procdemo-test.o: CPPFLAGS+=-I$(GTEST_HOME)/include
-procdemo-test.o: procdemo.c procdemo-test.cc emp-info.h sql-error.h
+procdemo-test.o: procdemo.c procdemo-test.cc oracle-login.h print-salesmen.h
 ifndef GTEST_HOME
 	$(error GTEST_HOME undefined)
 endif
