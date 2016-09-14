@@ -5,19 +5,6 @@ export PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
 
 warnings_line='([1-9][0-9]*) warnings generated\.'
 
-function ignore_next {
-    let skip=$1 ; shift
-    for line
-    do
-        : printf 'IGNORING: %s\n' "$line"
-    done
-    for i in $(seq 1 $skip)
-    do
-        IFS='' read -r line
-        : printf 'IGNORING: %s\n' "$line"
-    done
-}
-
 # Pick correctly between `clang` and `clang++`
 clang=${0##*/}
 clang=${clang/w/}
@@ -50,36 +37,9 @@ do
     *"unused variable 'sqlstm'"* \
         | *"unused variable 'IAPSUCC'"* \
         | *"unused variable 'IAPFAIL'"* \
-        | *"unused variable 'IAPFTL'"* \
-        | *"conversion from string literal to 'char *' is deprecated"* )
-        ignore_next 2 "$line"
+        | *"unused variable 'IAPFTL'"* )
+        read ; read # Skip next 2
         let ++ignored
-        ;;
-    *"passing 'char [512]' to parameter of type 'unsigned char *' converts between pointers to integer types with different sign"* )
-        IFS= read -r line2
-        case $line2 in
-        *'sqlglm(err_msg, &buf_len, &msg_len)'* )
-            ignore_next 4 "$line" "$line2"
-            let ++ignored
-            ;;
-        * )
-            printf '%s\n' "$line"
-            printf '%s\n' "$line2"
-            ;;
-        esac
-        ;;
-    *"field precision should have type 'int', but argument has type 'size_t' (aka 'unsigned long')"* )
-        IFS= read -r line2
-        case $line2 in
-        *'printf("%.*s\n", msg_len, err_msg)'* )
-            ignore_next 1 "$line" "$ine2"
-            let ++ignored
-            ;;
-        * )
-            printf '%s\n' "$line"
-            printf '%s\n' "$line2"
-            ;;
-        esac
         ;;
     * ) if [[ $line =~ $warnings_line ]]
         then

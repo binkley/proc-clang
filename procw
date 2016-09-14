@@ -4,28 +4,9 @@ set -e
 set -o pipefail
 
 : "${ICLIBHOME:?ICLIBHOME undefined}"
-: "${ICSDKHOME:?ICSDKHOME undefined}"
-
 export LD_LIBRARY_PATH=$ICLIBHOME:$LD_LIBRARY_PATH
-export PATH=$ICSDKHOME:$PATH
 
-function proc_no_banner {
-    $ICSDKHOME/proc "$@" | sed 1,7d
-}
-
-function fix_knr {
-    perl -i -0pe 's/void sql_error\(msg\) *\n *char \*msg;/void sql_error(char *msg)/' ${1%.pc}.c
-}
-
-function fix_sqlglm {
-    perl -i -0pe 's/sqlglm\(err_msg, &buf_len, &msg_len\);/sqlglm((unsigned char *)err_msg, &buf_len, &msg_len);/' ${1%.pc}.c
-}
-
-function rm_lis {
-    rm -f ${1%.pc}.lis
-}
-
-# Emulate behavior w.r.t. source file
+# Emulate proc behavior w.r.t. source file
 for arg
 do
     case $arg in
@@ -36,7 +17,5 @@ do
     esac
 done
 
-proc_no_banner "$@"
-fix_knr $source
-fix_sqlglm $source
-rm_lis $source
+$ICSDKHOME/proc "$@" | sed 1,7d
+rm -f ${source%.pc}.lis

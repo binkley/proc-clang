@@ -49,8 +49,8 @@ void sql_error(const char *msg)
  * error message.
  */
     buf_len = sizeof (err_msg);
-    sqlglm(err_msg, &buf_len, &msg_len);
-    printf("%.*s\n", msg_len, err_msg);
+    sqlglm((unsigned char *) err_msg, &buf_len, &msg_len);
+    printf("%.*s\n", (int) msg_len, err_msg);
 
     EXEC SQL ROLLBACK RELEASE;
     exit(EXIT_FAILURE);
