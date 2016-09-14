@@ -1,7 +1,6 @@
 *.c
 *.lis
 *.o
-/a
-/a-test
 /procdemo
-/procdemo-test
+/oracle-login-test
+/print-salesmen-test
