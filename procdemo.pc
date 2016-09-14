@@ -20,7 +20,16 @@
 int
 main()
 {
-    struct emp_info *emp_rec_ptr = oracle_login("scott", "tiger");
+    oracle_login("scott", "tiger");
+
+    struct emp_info *emp_rec_ptr;
+/* Allocate memory for emp_info struct. */
+    if ((emp_rec_ptr =
+        (struct emp_info *) malloc(sizeof(struct emp_info))) == 0)
+    {
+        fprintf(stderr, "Memory allocation error.\n");
+        exit(EXIT_FAILURE);
+    }
 
 /* Declare the cursor. All static SQL explicit cursors
  * contain SELECT commands. 'salespeople' is a SQL identifier,
