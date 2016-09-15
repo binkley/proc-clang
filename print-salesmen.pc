@@ -8,7 +8,11 @@
 
 #include "emp-info.h"
 
-void print_salesmen(printf_t printer)
+void print_salesmen() {
+    print_salesmen_with(printf);
+}
+
+void print_salesmen_with(printf_t printer)
 {
     struct emp_info *emp_rec_ptr;
     if ((emp_rec_ptr =

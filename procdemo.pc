@@ -7,7 +7,6 @@
  *  fetches the names, salaries, and commissions of all
  *  salespeople, displays the results, then closes the cursor.
  */
-#include <stdio.h>
 #include <stdlib.h>
 
 #include <sqlda.h>
@@ -20,7 +19,7 @@ main()
 {
     oracle_login("scott", "tiger");
 
-    print_salesmen(printf);
+    print_salesmen();
 
     exit(EXIT_SUCCESS);
 }
