@@ -8,7 +8,6 @@
  *  salespeople, displays the results, then closes the cursor.
  */
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
 
 #include <sqlda.h>
@@ -21,7 +20,7 @@ main()
 {
     oracle_login("scott", "tiger");
 
-    print_salesmen();
+    print_salesmen(printf);
 
     exit(EXIT_SUCCESS);
 }

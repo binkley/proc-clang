@@ -1,4 +1,5 @@
 #include "proc-gcc.h"
+#include "print-salesmen.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -7,7 +8,7 @@
 
 #include "emp-info.h"
 
-void print_salesmen()
+void print_salesmen(printf_t printer)
 {
     struct emp_info *emp_rec_ptr;
     if ((emp_rec_ptr =
@@ -30,9 +31,9 @@ void print_salesmen()
     EXEC SQL OPEN salespeople;
 
 /* Get ready to print results. */
-    printf("\n\nThe company's salespeople are--\n\n");
-    printf("Salesperson   Salary   Commission\n");
-    printf("-----------   ------   ----------\n");
+    printer("\n\nThe company's salespeople are--\n\n");
+    printer("Salesperson   Salary   Commission\n");
+    printer("-----------   ------   ----------\n");
 
 /* Loop, fetching all salesperson's statistics.
  * Cause the program to break the loop when no more
@@ -43,14 +44,14 @@ void print_salesmen()
     for (;;)
     {
         EXEC SQL FETCH salespeople INTO :emp_rec_ptr;
-        printf("%s %9.2f %12.2f\n", emp_rec_ptr->emp_name,
+        printer("%s %9.2f %12.2f\n", emp_rec_ptr->emp_name,
                 emp_rec_ptr->salary, emp_rec_ptr->commission);
     }
 
 /* Close the cursor. */
     EXEC SQL CLOSE salespeople;
 
-    printf("\nGOOD-BYE!!\n\n");
+    printer("\nGOOD-BYE!!\n\n");
 
     EXEC SQL COMMIT WORK RELEASE;
 
