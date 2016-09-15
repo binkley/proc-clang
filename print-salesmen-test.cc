@@ -3,3 +3,7 @@ extern "C" {
 }
 
 #include <gtest/gtest.h>
+
+TEST(PrintSalesmenUnitTest, OutputTest)
+{
+}

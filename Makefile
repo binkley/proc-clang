@@ -26,11 +26,11 @@ procdemo: LDLIBS+=-lgtest -lgtest_main
 procdemo: procdemo.o emp-info.o sql-error.o oracle-login.o print-salesmen.o
 
 oracle-login-test: LDFLAGS+=-L$(GTEST_HOME)
-oracle-login-test: LDLIBS+=-lgtest -lgtest_main
+oracle-login-test: LDLIBS+=-lgtest -lgtest_main -lc++
 oracle-login-test: oracle-login-test.o emp-info.o sql-error.o print-salesmen.o
 
 print-salesmen-test: LDFLAGS+=-L$(GTEST_HOME)
-print-salesmen-test: LDLIBS+=-lgtest -lgtest_main
+print-salesmen-test: LDLIBS+=-lgtest -lgtest_main -lc++
 print-salesmen-test: print-salesmen-test.o
 
 # TODO: Why do I need to be explicit for generated "C" files?
