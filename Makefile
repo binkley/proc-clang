@@ -11,9 +11,11 @@ PROC=./procw
 # check statements against schemas
 PROCFLAGS=CODE=ANSI_C INCLUDE=$(ICSDKHOME)/include LINES=YES
 
+.PHONY: all
 all: procdemo
 
 .PHONY: check
+#check: check_upc-test
 check: oracle-login-test print-salesmen-test
 	./run-test ${^:%=./%}
 
@@ -21,17 +23,19 @@ check: oracle-login-test print-salesmen-test
 clean:
 	$(RM) procdemo.c emp-info.c sql-error.c oracle-login.c print-salesmen.c procdemo oracle-login-test print-salesmen-test *.o *.lis
 
-procdemo: LDFLAGS+=-L$(GTEST_HOME)
-procdemo: LDLIBS+=-lgtest -lgtest_main
-procdemo: procdemo.o emp-info.o sql-error.o oracle-login.o print-salesmen.o
+define BUILD_test
+$(1:%=%.o): CPPFLAGS += -I$$(GTEST_HOME)/include
+$(1:%=%.o): $(1:%-test=%.c) $(1:%=%.cc)
+ifndef GTEST_HOME
+	$$(error GTEST_HOME undefined)
+endif
+	$$(COMPILE.cc) $$(OUTPUT_OPTION) $(1:%=%.cc)
 
-oracle-login-test: LDFLAGS+=-L$(GTEST_HOME)
-oracle-login-test: LDLIBS+=-lgtest -lgtest_main -lc++
-oracle-login-test: oracle-login-test.o emp-info.o sql-error.o print-salesmen.o
-
-print-salesmen-test: LDFLAGS+=-L$(GTEST_HOME)
-print-salesmen-test: LDLIBS+=-lgtest -lgtest_main -lc++
-print-salesmen-test: print-salesmen-test.o dump-stack.o
+$(1): LDFLAGS += -L$$(GTEST_HOME)
+$(1): LDLIBS += -lgtest -lgtest_main -lc++
+$(1): $(1:%=%.o)
+endef
+$(foreach t,$(wildcard *-test.cc),$(eval $(call BUILD_test,$(t:%.cc=%))))
 
 %.c: %.pc
 ifndef ICLIBHOME
@@ -43,16 +47,7 @@ endif
 	$(PROC) $(PROCFLAGS) INAME=$< ONAME=$@
 
 procdemo.o: procdemo.c oracle-login.h print-salesmen.h
-
-oracle-login-test.o: CPPFLAGS+=-I$(GTEST_HOME)/include
-oracle-login-test.o: oracle-login.c oracle-login-test.cc
-ifndef GTEST_HOME
-	$(error GTEST_HOME undefined)
-endif
-
-print-salesmen-test.o: CPPFLAGS+=-I$(GTEST_HOME)/include
-print-salesmen-test.o: print-salesmen.c print-salesmen-test.cc
-ifndef GTEST_HOME
-	$(error GTEST_HOME undefined)
-endif
+procdemo: procdemo.o emp-info.o sql-error.o oracle-login.o print-salesmen.o
+oracle-login-test: oracle-login-test.o emp-info.o sql-error.o print-salesmen.o
+print-salesmen-test: print-salesmen-test.o dump-stack.o
 
