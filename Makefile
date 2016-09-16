@@ -31,10 +31,8 @@ oracle-login-test: oracle-login-test.o emp-info.o sql-error.o print-salesmen.o
 
 print-salesmen-test: LDFLAGS+=-L$(GTEST_HOME)
 print-salesmen-test: LDLIBS+=-lgtest -lgtest_main -lc++
-print-salesmen-test: print-salesmen-test.o
+print-salesmen-test: print-salesmen-test.o dump-stack.o
 
-# TODO: Why do I need to be explicit for generated "C" files?
-.INTERMEDIATE: $(patsubst %.pc,%.c,$(wildcard *.pc))
 %.c: %.pc
 ifndef ICLIBHOME
 	$(error ICLIBHOME undefined)
@@ -43,8 +41,6 @@ ifndef ICSDKHOME
 	$(error ICSDKHOME undefined)
 endif
 	$(PROC) $(PROCFLAGS) INAME=$< ONAME=$@
-
-.INTERMEDIATE: procdemo.o emp-info.o sql-error.o oracle-login.o oracle-login-test.o print-salesmen.o print-salesmen-test.o
 
 procdemo.o: procdemo.c oracle-login.h print-salesmen.h
 
