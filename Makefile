@@ -24,14 +24,14 @@ clean:
 	$(RM) procdemo.c emp-info.c sql-error.c oracle-login.c print-salesmen.c procdemo oracle-login-test print-salesmen-test *.o *.lis
 
 define BUILD_test
-$(1:%=%.o): CPPFLAGS += -I$$(GTEST_HOME)/include
+$(1:%=%.o): CPPFLAGS += -I$$(GTEST_ROOT)/include
 $(1:%=%.o): $(1:%-test=%.c) $(1:%=%.cc)
-ifndef GTEST_HOME
-	$$(error GTEST_HOME undefined)
+ifndef GTEST_ROOT
+	$$(error GTEST_ROOT undefined)
 endif
 	$$(COMPILE.cc) $$(OUTPUT_OPTION) $(1:%=%.cc)
 
-$(1): LDFLAGS += -L$$(GTEST_HOME)
+$(1): LDFLAGS += -L$$(GTEST_ROOT)
 $(1): LDLIBS += -lgtest -lgtest_main -lc++
 $(1): $(1:%=%.o)
 endef

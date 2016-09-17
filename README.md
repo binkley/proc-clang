@@ -54,8 +54,8 @@ $ xcode-select --install
     ```
 $ export ICLIBHOME=...  # Needed to build
 $ export ICSDKHOME=$ICLIBHOME/sdk  # Needed to build
-$ export GTEST_HOME=...  # Needed to build tests
-$ export LD_LIBRARY_PATH=$ICLIBHOME:$GTEST_HOME  # Needed to run, but not to build
+$ export GTEST_ROOT=...  # Needed to build tests
+$ export LD_LIBRARY_PATH=$ICLIBHOME:$GTEST_ROOT  # Needed to run, but not to build
 ```
 
 ## If all goes well
