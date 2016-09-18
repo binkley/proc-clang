@@ -49,5 +49,5 @@ endif
 procdemo.o: procdemo.c oracle-login.h print-salesmen.h
 procdemo: procdemo.o emp-info.o sql-error.o oracle-login.o print-salesmen.o
 oracle-login-test: oracle-login-test.o emp-info.o sql-error.o print-salesmen.o
-print-salesmen-test: print-salesmen-test.o dump-stack.o
+print-salesmen-test: print-salesmen-test.o dump-stack.o sql-error.o
 

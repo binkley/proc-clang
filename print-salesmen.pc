@@ -7,6 +7,7 @@
 #include <sqlca.h>
 
 #include "emp-info.h"
+#include "sql-error.h"
 
 void print_salesmen() {
     print_salesmen_with(printf);
@@ -21,6 +22,8 @@ void print_salesmen_with(printf_t printer)
         fprintf(stderr, "Memory allocation error.\n");
         exit(EXIT_FAILURE);
     }
+
+    EXEC SQL WHENEVER SQLERROR DO sql_error("ORACLE error--");
 
 /* Declare the cursor. All static SQL explicit cursors
  * contain SELECT commands. 'salespeople' is a SQL identifier,

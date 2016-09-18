@@ -21,5 +21,5 @@ void sql_error(const char *msg)
 
     EXEC SQL ROLLBACK RELEASE;
     /* TODO: Do not exit - return failure, let caller exit */
-    exit(EXIT_FAILURE);
+    exit(2);
 } 
