@@ -15,7 +15,6 @@ PROCFLAGS=CODE=ANSI_C INCLUDE=$(ICSDKHOME)/include LINES=YES
 all: procdemo
 
 .PHONY: check
-#check: check_upc-test
 check: oracle-login-test print-salesmen-test
 	./run-test ${^:%=./%}
 
