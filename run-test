@@ -11,6 +11,7 @@ function setup_colors()
     readonly pgreen=$(printf "\e[32m")
     readonly pred=$(printf "\e[31m")
     readonly pboldred=$(printf "\e[31;1m")
+    readonly pgrey=$(printf "\e[37m")
     readonly preset=$(printf "\e[0m")
 }
 [[ -t 1 ]] && setup_colors
@@ -40,8 +41,10 @@ do
     esac
 done
 
+(( 0 == failed )) && pfailed="$pgrey" || pfailed="$pred"
+(( 0 == errored )) && perrored="$pgrey" || perrored="$pboldred"
 cat <<EOS
-${pbold}Summary${preset}: ${pgreen}$passed PASSED${preset}, ${pred}$failed FAILED${preset}, ${pboldred}$errored ERRORED${preset}
+${pbold}Summary${preset}: ${pgreen}$passed PASSED${preset}, ${pfailed}$failed FAILED${preset}, ${perrored}$errored ERRORED${preset}
 EOS
 
 if (( 0 < errored ))
