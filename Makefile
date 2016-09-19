@@ -15,7 +15,7 @@ PROCFLAGS=CODE=ANSI_C INCLUDE=$(ICSDKHOME)/include LINES=YES
 all: procdemo
 
 .PHONY: check
-check: oracle-login-test print-salesmen-test
+check: $(patsubst %-test.cc,%-test,$(wildcard *-test.cc))
 	./run-test ${^:%=./%}
 
 .PHONY: clean
