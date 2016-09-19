@@ -18,7 +18,7 @@ static const int max = 128;
 extern "C" {
 static int check_printing(const char *format, ...) {
     // dump_stack(1);
-    std::cout << "check_printing: " << format << std::endl;
+    // std::cout << "check_printing: " << format << std::endl;
 
     va_list ap;
     va_start(ap, format);
@@ -27,7 +27,7 @@ static int check_printing(const char *format, ...) {
     va_end(ap);
     messages.push_back(buf);
 
-    std::cout << "check_printing: (" << c << ") " << buf << std::endl;
+    // std::cout << "check_printing: (" << c << ") " << buf << std::endl;
 
     return c;
 }
