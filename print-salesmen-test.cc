@@ -10,13 +10,14 @@ extern "C" {
 #include <vector>
 
 #include "dump-stack.h"
+#include "oracle-login.h"
 
 static std::vector<char*> messages;
 static const int max = 128;
 
 extern "C" {
 static int check_printing(const char *format, ...) {
-    dump_stack(1);
+    // dump_stack(1);
     std::cout << "check_printing: " << format << std::endl;
 
     va_list ap;
@@ -34,6 +35,7 @@ static int check_printing(const char *format, ...) {
 
 TEST(PrintSalesmenUnitTest, OutputTest)
 {
+    oracle_login("scott", "tiger");
     print_salesmen_with(check_printing);
     ASSERT_STREQ("\n\nThe company's salespeople are--\n\n", messages[0]);
 }
