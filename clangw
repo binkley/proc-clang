@@ -38,7 +38,7 @@ function filter_diagnostics {
         let real_warnings=${BASH_REMATCH[1]}
         let warnings=$((real_warnings - ignored))
         (( 0 == warnings )) && continue
-        printf '%s\n' "${line/$real_warnings /$warnings /}"
+        printf '%s\n' "${line/$real_warnings /$warnings }"
     done
 
     return $warnings  # Simulate -Werror
