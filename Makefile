@@ -20,7 +20,7 @@ check: $(patsubst %-test.cc,%-test,$(wildcard *-test.cc))
 
 .PHONY: clean
 clean:
-	$(RM) procdemo.c emp-info.c sql-error.c oracle-login.c print-salesmen.c procdemo oracle-login-test print-salesmen-test *.o *.lis
+	$(RM) $(patsubst %.pc,%.c,$(wildcard *.pc)) $(patsubst %.pc,%,$(wildcard *.pc)) $(patsubst %-test.cc,%-test,$(wildcard *-test.cc)) *.o *.lis *.a
 
 define BUILD_test
 .DELETE_ON_ERROR: $(1:%=%.o)
