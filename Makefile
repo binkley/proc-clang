@@ -23,6 +23,7 @@ clean:
 	$(RM) procdemo.c emp-info.c sql-error.c oracle-login.c print-salesmen.c procdemo oracle-login-test print-salesmen-test *.o *.lis
 
 define BUILD_test
+.DELETE_ON_ERROR: $(1:%=%.o)
 $(1:%=%.o): CPPFLAGS += -I$$(GTEST_ROOT)/include
 $(1:%=%.o): $(1:%-test=%.c) $(1:%=%.cc)
 ifndef GTEST_ROOT
