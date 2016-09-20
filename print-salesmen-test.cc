@@ -34,10 +34,6 @@ static int check_printing(const char *format, ...) {
 }
 }
 
-static int foo() {
-    return 1;
-}
-
 TEST(PrintSalesmenUnitTest, OutputTest)
 {
     oracle_login("scott", "tiger");
@@ -46,5 +42,4 @@ TEST(PrintSalesmenUnitTest, OutputTest)
     TEST_DATA(3, _STRING("Bob Jones"), _FLOAT(3.14159f), _FLOAT(2.71828f));
     print_salesmen_with(check_printing);
     ASSERT_STREQ("\n\nThe company's salespeople are--\n\n", messages[0]);
-    ASSERT_EQ(1, foo());
 }
