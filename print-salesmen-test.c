@@ -1,45 +1,37 @@
-extern "C" {
-#include "print-salesmen.c"
+#include "print-salesmen.h"
 #include "mock-oracle.h"
-}
 
-#include <gtest/gtest.h>
+#include <ctest.h>
 
 #include <stdarg.h>
+#include <stdlib.h>
 #include <stdio.h>
-#include <iostream>
-#include <vector>
 
 #include "dump-stack.h"
 #include "oracle-login.h"
 
-static std::vector<char*> messages;
+static char *messages[20];
+static int n_messages;
+
 static const int max = 128;
 
-extern "C" {
 static int check_printing(const char *format, ...) {
-    // dump_stack(1);
-    // std::cout << "check_printing: " << format << std::endl;
-
     va_list ap;
     va_start(ap, format);
-    char* buf = new char[max];
+    char* buf = (char *) malloc(max);
     int c = vsnprintf(buf, max, format, ap);
     va_end(ap);
-    messages.push_back(buf);
-
-    // std::cout << "check_printing: (" << c << ") " << buf << std::endl;
+    messages[n_messages++] = buf;
 
     return c;
 }
-}
 
-TEST(PrintSalesmenUnitTest, OutputTest)
+CTEST(PrintSalesmenUnitTest, OutputTest)
 {
     oracle_login("scott", "tiger");
 
     RESET_DATA();
     TEST_DATA(3, _STRING("Bob Jones"), _FLOAT(3.14159f), _FLOAT(2.71828f));
     print_salesmen_with(check_printing);
-    ASSERT_STREQ("\n\nThe company's salespeople are--\n\n", messages[0]);
+    ASSERT_STR("\n\nThe company's salespeople are--\n\n", messages[0]);
 }
