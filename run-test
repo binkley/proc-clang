@@ -41,10 +41,11 @@ do
     esac
 done
 
+(( 0 == passed )) && ppassed="$pgrey" || ppassed="$pgreen"
 (( 0 == failed )) && pfailed="$pgrey" || pfailed="$pred"
 (( 0 == errored )) && perrored="$pgrey" || perrored="$pboldred"
 cat <<EOS
-${pbold}Summary${preset}: ${pgreen}$passed PASSED${preset}, ${pfailed}$failed FAILED${preset}, ${perrored}$errored ERRORED${preset}
+${pbold}Summary${preset}: ${ppassed}$passed PASSED${preset}, ${pfailed}$failed FAILED${preset}, ${perrored}$errored ERRORED${preset}
 EOS
 
 if (( 0 < errored ))
