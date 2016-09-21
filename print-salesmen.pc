@@ -8,59 +8,26 @@
 
 #include "emp-info.h"
 #include "sql-error.h"
+#include "fetch-salesmen.h"
 
-void print_salesmen() {
+static void handle_employee(struct emp_info *emp_rec_ptr, printf_t printer)
+{
+    printer("%s %9.2f %12.2f\n", emp_rec_ptr->emp_name,
+            emp_rec_ptr->salary, emp_rec_ptr->commission);
+}
+
+void print_salesmen()
+{
     print_salesmen_with(printf);
 }
 
 void print_salesmen_with(printf_t printer)
 {
-    struct emp_info *emp_rec_ptr;
-    if ((emp_rec_ptr =
-        (struct emp_info *) malloc(sizeof(struct emp_info))) == 0)
-    {
-        fprintf(stderr, "Memory allocation error.\n");
-        exit(EXIT_FAILURE);
-    }
-
-    EXEC SQL WHENEVER SQLERROR DO sql_error("ORACLE error--");
-
-/* Declare the cursor. All static SQL explicit cursors
- * contain SELECT commands. 'salespeople' is a SQL identifier,
- * not a (C) host variable.
- */
-    EXEC SQL DECLARE salespeople CURSOR FOR
-        SELECT ENAME, SAL, COMM
-            FROM EMP
-            WHERE JOB LIKE 'SALES%';
-
-/* Open the cursor. */
-    EXEC SQL OPEN salespeople;
-
-/* Get ready to print results. */
     printer("\n\nThe company's salespeople are--\n\n");
     printer("Salesperson   Salary   Commission\n");
     printer("-----------   ------   ----------\n");
 
-/* Loop, fetching all salesperson's statistics.
- * Cause the program to break the loop when no more
- * data can be retrieved on the cursor.
- */
-    EXEC SQL WHENEVER NOT FOUND DO break;
-
-    for (;;)
-    {
-        EXEC SQL FETCH salespeople INTO :emp_rec_ptr;
-        printer("%s %9.2f %12.2f\n", emp_rec_ptr->emp_name,
-                emp_rec_ptr->salary, emp_rec_ptr->commission);
-    }
-
-/* Close the cursor. */
-    EXEC SQL CLOSE salespeople;
+    fetch_salesmen((employee_handler) handle_employee, (void *) printer);
 
     printer("\nGOOD-BYE!!\n\n");
-
-    EXEC SQL COMMIT WORK RELEASE;
-
-    free(emp_rec_ptr);
 }

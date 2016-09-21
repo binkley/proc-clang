@@ -46,8 +46,7 @@ ifndef ICSDKHOME
 endif
 	$(PROC) $(PROCFLAGS) INAME=$< ONAME=$@
 
-procdemo.o: procdemo.c oracle-login.h print-salesmen.h
-procdemo: procdemo.o emp-info.o sql-error.o oracle-login.o print-salesmen.o
+procdemo: procdemo.o emp-info.o sql-error.o oracle-login.o print-salesmen.o fetch-salesmen.o
 oracle-login-test: oracle-login-test.o emp-info.o sql-error.o mock-oracle.o
-print-salesmen-test: print-salesmen-test.o dump-stack.o sql-error.o oracle-login.o mock-oracle.o
+print-salesmen-test: print-salesmen-test.o dump-stack.o sql-error.o oracle-login.o mock-oracle.o fetch-salesmen.o
 

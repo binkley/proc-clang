@@ -1,0 +1,41 @@
+#include "proc-gcc.h"
+#include "fetch-salesmen.h"
+
+#include <stdlib.h>
+#include <stdio.h>
+
+#include <sqlca.h>
+
+#include "emp-info.h"
+#include "sql-error.h"
+
+void fetch_salesmen(employee_handler handle_employee, void *extra)
+{
+    struct emp_info *emp_rec_ptr;
+    if ((emp_rec_ptr =
+        (struct emp_info *) malloc(sizeof(struct emp_info))) == 0)
+    {
+        perror("Memory allocation error");
+        exit(EXIT_FAILURE);
+    }
+
+    EXEC SQL WHENEVER SQLERROR DO sql_error("ORACLE error--");
+
+    EXEC SQL DECLARE salespeople CURSOR FOR
+        SELECT ENAME, SAL, COMM
+            FROM EMP
+            WHERE JOB LIKE 'SALES%';
+
+    EXEC SQL OPEN salespeople;
+    EXEC SQL WHENEVER NOT FOUND DO break;
+
+    for (;;) {
+        EXEC SQL FETCH salespeople INTO :emp_rec_ptr;
+        handle_employee(emp_rec_ptr, extra);
+    }
+
+    EXEC SQL CLOSE salespeople;
+    EXEC SQL COMMIT WORK RELEASE;
+
+    free(emp_rec_ptr);
+}
