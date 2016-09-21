@@ -10,6 +10,6 @@ typedef struct _data_field {
 
 extern void RESET_DATA();
 extern void TEST_DATA(const int n, ...);
-extern data_field_t *_STRING(const char *s);
-extern data_field_t *_FLOAT(const float f);
+extern const data_field_t *_STRING(const char *s);
+extern const data_field_t *_FLOAT(const float f);
 #endif

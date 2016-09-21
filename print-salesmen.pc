@@ -10,24 +10,27 @@
 #include "sql-error.h"
 #include "fetch-salesmen.h"
 
-static void handle_employee(emp_info_t *emp_rec_ptr, printf_t printer)
+static void
+handle_employee(const emp_info_t *p_emp_info, const printf_t printer)
 {
-    printer("%s %9.2f %12.2f\n", emp_rec_ptr->emp_name,
-            emp_rec_ptr->salary, emp_rec_ptr->commission);
+    printer("%s %9.2f %12.2f\n", p_emp_info->emp_name,
+            p_emp_info->salary, p_emp_info->commission);
 }
 
-void print_salesmen()
+void
+print_salesmen()
 {
     print_salesmen_with(printf);
 }
 
-void print_salesmen_with(printf_t printer)
+void
+print_salesmen_with(const printf_t printer)
 {
     printer("\n\nThe company's salespeople are--\n\n");
     printer("Salesperson   Salary   Commission\n");
     printer("-----------   ------   ----------\n");
 
-    fetch_salesmen((employee_handler) handle_employee, (void *) printer);
+    fetch_salesmen((const employee_handler) handle_employee, (void *) printer);
 
     printer("\nGOOD-BYE!!\n\n");
 }

@@ -9,10 +9,11 @@
 #include "emp-info.h"
 #include "sql-error.h"
 
-void fetch_salesmen(const employee_handler handle_employee, void *extra)
+void
+fetch_salesmen(const employee_handler handle_employee, void *extra)
 {
     emp_info_t emp_info;
-    emp_info_t *p_emp_info = &emp_info;
+    const emp_info_t *p_emp_info = &emp_info;
 
     EXEC SQL WHENEVER SQLERROR DO sql_error("ORACLE error--");
 
