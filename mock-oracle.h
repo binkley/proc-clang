@@ -1,16 +1,21 @@
-#include <stdarg.h>
+#ifndef _MOCK_ORACLE_H
+#define _MOCK_ORACLE_H
+
 #include <stddef.h>
-#include <stdlib.h>
-#include <string.h>
 
-#include <sqlca.h>
-
-typedef struct _field {
+typedef struct _data_field {
     void *data;
     size_t len;
 } data_field_t;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 extern void RESET_DATA();
 extern void TEST_DATA(const int n, ...);
 extern data_field_t _STRING(const char *s);
 extern data_field_t _FLOAT(const float f);
+#ifdef __cplusplus
+}
+#endif
+#endif
