@@ -10,7 +10,7 @@
 #include "sql-error.h"
 #include "fetch-salesmen.h"
 
-static void handle_employee(struct emp_info *emp_rec_ptr, printf_t printer)
+static void handle_employee(emp_info_t *emp_rec_ptr, printf_t printer)
 {
     printer("%s %9.2f %12.2f\n", emp_rec_ptr->emp_name,
             emp_rec_ptr->salary, emp_rec_ptr->commission);

@@ -2,10 +2,10 @@
 #define _EMP_INFO_H
 #include "procdemo.h"
 
-struct emp_info 
+typedef struct emp_info 
 { 
     asciiz     emp_name; 
     float      salary; 
     float      commission; 
-}; 
+} emp_info_t; 
 #endif

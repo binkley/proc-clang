@@ -6,11 +6,11 @@
 #include <ctest.h>
 #include "mock-oracle.h"
 
-static struct emp_info *employees[3]; /* Really, will you hire more than 3 people? */
+static emp_info_t *employees[3]; /* Really, will you hire more than 3 people? */
 static int n_employees;
 
-static void save_data(struct emp_info *emp_rec_ptr, void *extra) {
-    struct emp_info *copy = (struct emp_info *) malloc(sizeof(struct emp_info));
+static void save_data(const emp_info_t *emp_rec_ptr, void *extra) {
+    emp_info_t *copy = (emp_info_t *) malloc(sizeof(emp_info_t));
     strcpy(copy->emp_name, emp_rec_ptr->emp_name);
     copy->salary = emp_rec_ptr->salary;
     copy->commission = emp_rec_ptr->commission;
@@ -26,7 +26,7 @@ CTEST(MockOracle, FetchMockData) {
 
     ASSERT_EQUAL(2, n_employees);
 
-    struct emp_info *emp_rec_ptr = employees[0];
+    const emp_info_t *emp_rec_ptr = employees[0];
     ASSERT_STR("John Smith", emp_rec_ptr->emp_name);
     /* ASSERT_EQUAL(3.14159f, emp_rec_ptr->salary);
     ASSERT_EQUAL(2.71828f, emp_rec_ptr->commission); */
