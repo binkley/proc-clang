@@ -50,26 +50,32 @@ TEST_DATA(const int n, ...)
     ++_n_records;
 }
 
+static const data_field_t *
+make_field(const void *p, const size_t len)
+{
+    data_field_t *field = (data_field_t *) malloc(sizeof(data_field_t));
+    field->len = len;
+    field->data = malloc(len);
+    memcpy(field->data, p, len);
+    return field;
+}
+
 const data_field_t *
 _STRING(const char *s)
 {
-    data_field_t *field = (data_field_t *) malloc(sizeof(data_field_t));
-    const size_t len = strlen(s) + 1;
-    field->len = len;
-    field->data = malloc(len);
-    strncpy(field->data, s, len);
-    return field;
+    return make_field((void *) s, strlen(s) + 1);
+}
+
+const data_field_t *
+_INT(const int i)
+{
+    return make_field((void *) &i, sizeof(int));
 }
 
 const data_field_t *
 _FLOAT(const float f)
 {
-    data_field_t *field = (data_field_t *) malloc(sizeof(data_field_t));
-    const size_t len = sizeof(float);
-    field->len = len;
-    field->data = malloc(len);
-    memcpy(field->data, (void *) &f, len);
-    return field;
+    return make_field((void *) &f, sizeof(float));
 }
 
 static void

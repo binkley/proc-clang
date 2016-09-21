@@ -1,5 +1,5 @@
 #include "emp-info.h"
 
-EXEC SQL TYPE asciiz IS CHARZ(PWD_LEN) REFERENCE; 
+EXEC SQL TYPE asciiz IS CHARZ(DB_STR_MAX) REFERENCE; 
 asciiz     username; 
 asciiz     password; 

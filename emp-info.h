@@ -4,8 +4,9 @@
 
 typedef struct emp_info 
 { 
-    asciiz     emp_name; 
-    float      salary; 
-    float      commission; 
+    asciiz emp_name; 
+    int emp_no;
+    float salary; 
+    float commission; 
 } emp_info_t; 
 #endif
