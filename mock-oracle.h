@@ -13,8 +13,8 @@ extern "C" {
 #endif
 extern void RESET_DATA();
 extern void TEST_DATA(const int n, ...);
-extern data_field_t _STRING(const char *s);
-extern data_field_t _FLOAT(const float f);
+extern data_field_t *_STRING(const char *s);
+extern data_field_t *_FLOAT(const float f);
 #ifdef __cplusplus
 }
 #endif

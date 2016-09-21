@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <stdio.h>
+
 #include <sqlca.h>
 
 #include "mock-oracle.h"
@@ -13,49 +15,54 @@ typedef struct _record {
     int n_fields;
     data_field_t fields[20];
 } record_t;
-static int _n_records;
 static record_t _records[20];
+static int _n_records;
 static int _x_records;
 
-static void _record_1_field(record_t record, data_field_t field)
+static void _record_1_field(data_field_t *field)
 {
-    record.fields[record.n_fields] = field;
-    ++record.n_fields;
-}
-
-static void _record_1_record(record_t record)
-{
-    _records[_n_records] = record;
-    ++_n_records;
+    record_t *record = &_records[_n_records];
+    data_field_t *current = &record->fields[record->n_fields];
+    current->data = field->data;
+    current->len = field->len;
+    ++record->n_fields;
 }
 
 void RESET_DATA()
 {
     _n_records = 0;
+    // TODO: free malloc'd memory in fields
     _x_records = 0;
 }
 
 void TEST_DATA(const int n, ...)
 {
-    record_t record = _records[_n_records];
     int i;
     va_list ap;
     va_start(ap, n);
     for (i = 0; i < n; ++i)
-        _record_1_field(record, va_arg(ap, data_field_t));
+        _record_1_field(va_arg(ap, data_field_t *));
     va_end(ap);
-    _record_1_record(record);
+    ++_n_records;
 }
 
-data_field_t _STRING(const char *s)
+data_field_t *_STRING(const char *s)
 {
-    data_field_t field = { (void *) s, (strlen(s) + 1) };
+    data_field_t *field = (data_field_t *) malloc(sizeof(data_field_t));
+    size_t len = strlen(s) + 1;
+    field->len = len;
+    field->data = malloc(len);
+    strncpy(field->data, s, len);
     return field;
 }
 
-data_field_t _FLOAT(const float f)
+data_field_t *_FLOAT(const float f)
 {
-    data_field_t field = { (void *) &f, sizeof(f) };
+    data_field_t *field = (data_field_t *) malloc(sizeof(data_field_t));
+    size_t len = sizeof(float);
+    field->len = len;
+    field->data = malloc(len);
+    memcpy(field->data, (void *) &f, len);
     return field;
 }
 
@@ -64,28 +71,29 @@ static void recv_eof(struct sqlexd *sqlstm)
     sqlca.sqlcode = 1403;
 }
 
-static void recv_field(struct sqlexd *sqlstm, record_t record, int n)
+static void recv_field(void *slot, const data_field_t *field)
 {
-    data_field_t field = record.fields[n];
-    memcpy((void *) (sqlstm->sqhstv[n]), field.data, field.len);
+    memcpy(slot, field->data, field->len);
 }
 
-static void recv_record(struct sqlexd *sqlstm, record_t record)
+static void recv_record(struct sqlexd *sqlstm, const record_t *record)
 {
-    int i;
-    for (i = 0; 0 < record.n_fields; ++i)
-        recv_field(sqlstm, record, i);
+    int i, x;
+    for (i = 0, x = record->n_fields; i < x; ++i)
+        recv_field(sqlstm->sqhstv[i], &record->fields[i]);
 }
 
 void
 sqlcxt(void **ignored, unsigned int *sqlctx, struct sqlexd *sqlstm,
         const struct sqlcxp *sqlfpn)
 {
+    if (0 == sqlstm->arrsiz)
+        return;
     if (_n_records == _x_records) {
         recv_eof(sqlstm);
         return;
     }
-    record_t record = _records[_x_records++];
+    record_t *record = &_records[_x_records++];
     recv_record(sqlstm, record);
 }
 

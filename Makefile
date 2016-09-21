@@ -1,8 +1,8 @@
 CC=./clangw
-CFLAGS=-Wall
+CFLAGS=-Wall -g
 CPPFLAGS=-I$(ICSDKHOME)/include
 CXX=./clangw++
-CXXFLAGS=-Wall
+CXXFLAGS=-Wall -g
 # -DMAC_OSX -D_GNU_SOURCE -DSLTS_ENABLE -DSLMXMX_ENABLE -D_REENTRANT -DNS_THREADS -DSS_64BIT_SERVER -DORAX86_64 -DBIT64 -DMACHINE64 -DSLS8NATIVE -DSLU8NATIVE -m64 -D_BCERT_API_ -DRSA_PLATFORM=RSA_MAC_X86_64_DARWIN
 LDFLAGS=-L$(ICLIBHOME)
 LDLIBS=-lclntsh
@@ -47,6 +47,7 @@ endif
 	$(PROC) $(PROCFLAGS) INAME=$< ONAME=$@
 
 procdemo: procdemo.o emp-info.o sql-error.o oracle-login.o print-salesmen.o fetch-salesmen.o
+fetch-salesmen-test: fetch-salesmen-test.o sql-error.o mock-oracle.o
 oracle-login-test: oracle-login-test.o emp-info.o sql-error.o mock-oracle.o
 print-salesmen-test: print-salesmen-test.o dump-stack.o sql-error.o oracle-login.o mock-oracle.o fetch-salesmen.o
 
