@@ -17,5 +17,13 @@ do
     esac
 done
 
-$ICSDKHOME/proc "$@" | sed 1,7d
-rm -f ${source%.pc}.lis
+$ICSDKHOME/proc "$@" | sed 1,7d # | ex -c \
+# '/^#include <stdarg.h>/
+# .-1,.+2d
+# x' -
+# rm -f ${source%.pc}.lis
+# 
+# 'Error at line 3, column 10 in file mock-oracle.pc
+# #include <stdarg.h>
+# .........1
+# PCC-S-02015, unable to open include file'

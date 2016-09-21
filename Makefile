@@ -21,7 +21,7 @@ clean:
 	$(RM) $(patsubst %.pc,%.c,$(wildcard *.pc)) $(patsubst %.pc,%,$(wildcard *.pc)) $(patsubst %-test.c,%-test,$(wildcard *-test.c)) *.o *.lis *.a
 
 %-test.o: CPPFLAGS += -I$(CTEST_HOME)
-test-main.o: CPPFLAGS += -I$(CTEST_HOME)
+ctest.o: CPPFLAGS += -I$(CTEST_HOME)
 
 %.c: %.pc
 ifndef ICLIBHOME
@@ -33,8 +33,8 @@ endif
 	$(PROC) $(PROCFLAGS) INAME=$< ONAME=$@
 
 procdemo: procdemo.o emp-info.o sql-error.o oracle-login.o print-salesmen.o fetch-salesmen.o
-fetch-salesmen-test: fetch-salesmen-test.o fetch-salesmen.o sql-error.o mock-oracle.o test-main.o
-oracle-login-test: oracle-login-test.o oracle-login.o emp-info.o sql-error.o mock-oracle.o test-main.o
-print-salesmen-test: print-salesmen-test.o print-salesmen.o dump-stack.o sql-error.o oracle-login.o mock-oracle.o fetch-salesmen.o test-main.o
+fetch-salesmen-test: fetch-salesmen-test.o fetch-salesmen.o sql-error.o mock-oracle.o ctest.o
+oracle-login-test: oracle-login-test.o oracle-login.o emp-info.o sql-error.o mock-oracle.o ctest.o
+print-salesmen-test: print-salesmen-test.o print-salesmen.o dump-stack.o sql-error.o oracle-login.o mock-oracle.o fetch-salesmen.o ctest.o
 
 Makefile: ;
