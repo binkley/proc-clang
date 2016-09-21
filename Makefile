@@ -51,3 +51,4 @@ fetch-salesmen-test: fetch-salesmen-test.o sql-error.o mock-oracle.o
 oracle-login-test: oracle-login-test.o emp-info.o sql-error.o mock-oracle.o
 print-salesmen-test: print-salesmen-test.o dump-stack.o sql-error.o oracle-login.o mock-oracle.o fetch-salesmen.o
 
+Makefile: ;
