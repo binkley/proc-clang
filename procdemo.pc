@@ -7,6 +7,7 @@
  *  fetches the names, salaries, and commissions of all
  *  salespeople, displays the results, then closes the cursor.
  */
+#include <stdio.h>
 #include <stdlib.h>
 
 #include <sqlda.h>
@@ -15,9 +16,19 @@
 #include "print-salesmen.h"
 
 int
-main()
+main(const int argc, const char *argv[])
 {
-    oracle_login("scott", "tiger", "10.240.36.131/SWM1");
+    const char *connect;
+    switch(argc) {
+    case 2:
+        connect = argv[1];
+        break;
+    default:
+        fprintf(stderr, "Usage: %s <connect>\n", argv[0]);
+        exit(2);
+    }
+
+    oracle_login("scott", "tiger", connect);
 
     print_salesmen();
 
