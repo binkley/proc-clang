@@ -9,11 +9,8 @@
 #include "sql-error.h"
 
 void
-oracle_login(char const *username, char const *password)
+oracle_login(char const *username, char const *password, const char *connect)
 {
-    char const *connect = "10.240.36.131/SWM1";
-
-/* Connect to ORACLE. */
     EXEC SQL WHENEVER SQLERROR DO sql_error("ORACLE error--");
 
     EXEC SQL CONNECT :username IDENTIFIED BY :password

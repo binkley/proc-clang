@@ -35,6 +35,6 @@ endif
 procdemo: procdemo.o emp-info.o sql-error.o oracle-login.o print-salesmen.o fetch-salesmen.o
 fetch-salesmen-test: fetch-salesmen-test.o fetch-salesmen.o sql-error.o mock-oracle.o ctest.o
 oracle-login-test: oracle-login-test.o oracle-login.o emp-info.o sql-error.o mock-oracle.o ctest.o
-print-salesmen-test: print-salesmen-test.o print-salesmen.o dump-stack.o sql-error.o oracle-login.o mock-oracle.o fetch-salesmen.o ctest.o
+print-salesmen-test: print-salesmen-test.o print-salesmen.o sql-error.o mock-oracle.o fetch-salesmen.o ctest.o
 
 Makefile: ;

@@ -13,8 +13,8 @@
 static void
 handle_employee(const emp_info_t *p_emp_info, const printf_t printer)
 {
-    printer("%s %9.2f %12.2f\n", p_emp_info->emp_name,
-            p_emp_info->salary, p_emp_info->commission);
+    printer("%s    %d%9.2f %12.2f\n", p_emp_info->emp_name,
+            p_emp_info->emp_no, p_emp_info->salary, p_emp_info->commission);
 }
 
 void
@@ -27,8 +27,8 @@ void
 print_salesmen_with(const printf_t printer)
 {
     printer("\n\nThe company's salespeople are--\n\n");
-    printer("Salesperson   Salary   Commission\n");
-    printer("-----------   ------   ----------\n");
+    printer("Salesperson   No.    Salary   Commission\n");
+    printer("-----------   ----   ------   ----------\n");
 
     fetch_salesmen((const employee_handler) handle_employee, (void *) printer);
 

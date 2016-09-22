@@ -17,7 +17,7 @@
 int
 main()
 {
-    oracle_login("scott", "tiger");
+    oracle_login("scott", "tiger", "10.240.36.131/SWM1");
 
     print_salesmen();
 

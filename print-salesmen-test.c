@@ -7,9 +7,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "dump-stack.h"
-#include "oracle-login.h"
-
 static char *messages[20];
 static int n_messages;
 
@@ -28,8 +25,6 @@ static int check_printing(const char *format, ...) {
 
 CTEST(PrintSalesmenUnitTest, OutputTest)
 {
-    oracle_login("scott", "tiger");
-
     RESET_DATA();
     TEST_DATA(3, _STRING("Bob Jones"), _FLOAT(3.14159f), _FLOAT(2.71828f));
     print_salesmen_with(check_printing);

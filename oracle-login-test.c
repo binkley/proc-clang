@@ -5,5 +5,5 @@
 CTEST(OracleLoginUnitTest, LoginTest)
 {
     /* Test passes if login works */
-    oracle_login("scott", "tiger");
+    oracle_login("scott", "tiger", "no-such-host/no-such-db");
 }

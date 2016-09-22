@@ -18,7 +18,7 @@ fetch_salesmen(const employee_handler handle_employee, void *extra)
     EXEC SQL WHENEVER SQLERROR DO sql_error("ORACLE error--");
 
     EXEC SQL DECLARE salespeople CURSOR FOR
-        SELECT ENAME, SAL, COMM
+        SELECT ENAME, EMPNO, SAL, COMM
             FROM EMP
             WHERE JOB LIKE 'SALES%';
 
