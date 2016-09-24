@@ -17,13 +17,25 @@ do
     esac
 done
 
-$ICSDKHOME/proc "$@" | sed 1,7d # | ex -c \
-# '/^#include <stdarg.h>/
-# .-1,.+2d
-# x' -
-# rm -f ${source%.pc}.lis
-# 
+{
+    $ICSDKHOME/proc "$@" && rm ${source%.pc}.lis
+} | sed 1,7d
+
 # 'Error at line 3, column 10 in file mock-oracle.pc
 # #include <stdarg.h>
 # .........1
 # PCC-S-02015, unable to open include file'
+
+# Syntax error at line 17356, column 52, file
+# /usr/include/AvailabilityInternal.h:
+# Error at line 17356, column 52 in file /usr/include/AvailabilityInternal.h
+# #define __API_AVAILABLE_GET_MACRO(_1,_2,_3,_4,NAME,...) NAME
+# ...................................................1
+# PCC-S-02014, Encountered the symbol "..." when expecting one of the following:
+# 
+#    an identifier, define, elif, else, endif, error, if, ifdef,
+#    ifndef, include, line, pragma, undef, exec, sql, begin, end,
+#    var, type, oracle, an immediate preprocessor command,
+#    a C token, create, function, package, procedure, trigger, or,
+#    replace,
+#
