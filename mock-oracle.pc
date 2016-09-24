@@ -11,12 +11,19 @@
 
 #include "mock-oracle.h"
 
+#ifndef MAX_DATA_FIELDS
+#define MAX_DATA_FIELDS 20
+#endif
+#ifndef MAX_DATA_RECORDS
+#define MAX_DATA_RECORDS 20
+#endif
+
 typedef struct _record {
     int n_fields;
-    data_field_t fields[20];
+    data_field_t fields[MAX_DATA_FIELDS];
 } record_t;
 
-static record_t _records[20];
+static record_t _records[MAX_DATA_RECORDS];
 static int _n_records;
 static int _x_records;
 
