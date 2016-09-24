@@ -32,7 +32,6 @@ function tally {
 
 for t
 do
-    echo "${pbold}Script $t:${preset}"
     $t
     case $? in
     0 ) let ++passed ;;
