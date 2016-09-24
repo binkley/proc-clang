@@ -49,27 +49,50 @@ $ xcode-select --install
    what newer versions of XLC (IBM's compiler) are based on, although SWMS is
    using a much older pre-clang version of XLC.
 
-10. Export these:
+10. Clone [Xian Yi's ctest fork](https://github.com/xianyi/ctest).
+
+11. Export these:
 
     ```
 $ export ICLIBHOME=...  # Needed to build
 $ export ICSDKHOME=$ICLIBHOME/sdk  # Needed to build
-$ export GTEST_ROOT=...  # Needed to build tests
-$ export LD_LIBRARY_PATH=$ICLIBHOME:$GTEST_ROOT  # Needed to run, but not to build
+$ export CTEST_HOME=...  # Needed to build tests; point to ctest repo
+$ export LD_LIBRARY_PATH=$ICLIBHOME:$LD_LIBRARY_PATH  # Needed to run, but not to build
 ```
 
 ## If all goes well
 
 Try:
 ```
-$ make clean all check
-# Lots of build output, including test results
-$ ./a
-The salary is 0.
+# Build output elided
+$ make all
 $ ./procdemo
 
-ORACLE error--
-ORA-12162: TNS:net service name is incorrectly specified
+Connected to ORACLE as user: scott
+
+
+The company's salespeople are--
+
+Salesperson   No.    Salary   Commission
+-----------   ----   ------   ----------
+ALLEN         7499  1600.00       300.00
+WARD          7521  1250.00       500.00
+MARTIN        7654  1250.00      1400.00
+TURNER        7844  1500.00         0.00
+
+GOOD-BYE!!
+
+$ make check
+$ make check
+TEST 1/1 OracleLoginUnitTest:LoginTest 
+Connected to ORACLE as user: scott
+[OK]
+RESULTS: 1 tests (1 ok, 0 failed, 0 skipped) ran in 0 ms
+TEST 1/1 MockOracle:FetchMockData [OK]
+RESULTS: 1 tests (1 ok, 0 failed, 0 skipped) ran in 0 ms
+TEST 1/1 PrintSalesmenUnitTest:OutputTest [OK]
+RESULTS: 1 tests (1 ok, 0 failed, 0 skipped) ran in 0 ms
+Summary: 3 PASSED, 0 FAILED, 0 ERRORED
 
 $ make clean
 ```
