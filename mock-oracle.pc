@@ -11,50 +11,78 @@
 
 #include "mock-oracle.h"
 
-#ifndef MAX_DATA_FIELDS
-#define MAX_DATA_FIELDS 20
-#endif
-#ifndef MAX_DATA_RECORDS
-#define MAX_DATA_RECORDS 20
-#endif
+typedef struct _data_record {
+    data_field_t *head_field;
+    struct _data_record *next;
+} data_record_t;
 
-typedef struct _record {
-    int n_fields;
-    data_field_t fields[MAX_DATA_FIELDS];
-} record_t;
-
-static record_t _records[MAX_DATA_RECORDS];
-static int _n_records;
-static int _x_records;
+static data_record_t *head_record;
+static data_record_t *current_record;
 
 static void
-record_field(const data_field_t *field)
+add_field(data_record_t *record, data_field_t *field)
 {
-    record_t *record = &_records[_n_records];
-    data_field_t *current = &record->fields[record->n_fields];
-    current->data = field->data;
-    current->len = field->len;
-    ++record->n_fields;
+    data_field_t *current = record->head_field;
+    if (!current)
+        record->head_field = field;
+    else {
+        while (current->next)
+            current = current->next;
+        current->next = field;
+    }
 }
 
-void
-RESET_DATA()
+static data_record_t *
+make_record()
 {
-    _n_records = 0;
-    // TODO: free malloc'd memory in fields
-    _x_records = 0;
+    data_record_t *current = head_record;
+    if (!current)
+        current = head_record
+            = (data_record_t *) calloc(1, sizeof(data_record_t));
+    else {
+        while (current->next)
+            current = current->next;
+        current = current->next
+            = (data_record_t *) calloc(1, sizeof(data_record_t));
+    }
+    return current;
+}
+
+static void
+free_fields(data_record_t *record)
+{
+    data_field_t *current = record->head_field;
+    data_field_t *next;
+    while (current) {
+        next = current->next;
+        free(current);
+        current = next;
+    }
+}
+
+static void
+free_records()
+{
+    data_record_t *current = head_record;
+    data_record_t *next;
+    while (current) {
+        free_fields(current);
+        next = current->next;
+        free(current);
+        current = next;
+    }
 }
 
 void
 TEST_DATA(const int n, ...)
 {
+    data_record_t *record = make_record();
     int i;
     va_list ap;
     va_start(ap, n);
     for (i = 0; i < n; ++i)
-        record_field(va_arg(ap, data_field_t *));
+        add_field(record, va_arg(ap, data_field_t *));
     va_end(ap);
-    ++_n_records;
 }
 
 static const data_field_t *
@@ -98,11 +126,15 @@ recv_field(void *slot, const data_field_t *field)
 }
 
 static void
-recv_record(struct sqlexd *sqlstm, const record_t *record)
+recv_record(struct sqlexd *sqlstm, const data_record_t *record)
 {
-    int i, x;
-    for (i = 0, x = record->n_fields; i < x; ++i)
-        recv_field(sqlstm->sqhstv[i], &record->fields[i]);
+    int i = 0;
+    data_field_t *current = record->head_field;
+    while (current) {
+        recv_field(sqlstm->sqhstv[i], current);
+        ++i;
+        current = current->next;
+    }
 }
 
 void
@@ -110,13 +142,15 @@ sqlcxt(void **ignored, unsigned int *sqlctx, struct sqlexd *sqlstm,
         const struct sqlcxp *sqlfpn)
 {
     if (0 == sqlstm->arrsiz)
-        return;
-    if (_n_records == _x_records) {
+        current_record = head_record;
+    else if (!current_record) {
+        free_records();
+        head_record = 0;
         recv_eof(sqlstm);
-        return;
+    } else {
+        recv_record(sqlstm, current_record);
+        current_record = current_record->next;
     }
-    const record_t *record = &_records[_x_records++];
-    recv_record(sqlstm, record);
 }
 
 #pragma clang diagnostic push

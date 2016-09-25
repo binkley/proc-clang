@@ -25,7 +25,6 @@ static int check_printing(const char *format, ...) {
 
 CTEST(PrintSalesmenUnitTest, OutputTest)
 {
-    RESET_DATA();
     TEST_DATA(3, _STRING("Bob Jones"), _FLOAT(3.14159f), _FLOAT(2.71828f));
     print_salesmen_with(check_printing);
     ASSERT_STR("\n\nThe company's salespeople are--\n\n", messages[0]);

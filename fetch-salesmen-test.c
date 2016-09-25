@@ -20,7 +20,6 @@ save_data(const emp_info_t *p_emp_info, void *extra) {
 }
 
 CTEST(MockOracle, FetchMockData) {
-    RESET_DATA();
     TEST_DATA(4, _STRING("John Smith"), _INT(2), _FLOAT(3.14159f),
             _FLOAT(2.71828f));
     TEST_DATA(4, _STRING("Mary Jones"), _INT(6), _FLOAT(3.14159f),
