@@ -6,6 +6,7 @@
 typedef struct _data_field {
     void *data;
     size_t len;
+    struct _data_field *next;
 } data_field_t;
 
 extern void RESET_DATA();

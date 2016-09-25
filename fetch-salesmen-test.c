@@ -11,7 +11,7 @@ static int n_employees;
 
 static void
 save_data(const emp_info_t *p_emp_info, void *extra) {
-    emp_info_t *copy = (emp_info_t *) malloc(sizeof(emp_info_t));
+    emp_info_t *copy = (emp_info_t *) calloc(1, sizeof(emp_info_t));
     strcpy(copy->emp_name, p_emp_info->emp_name);
     copy->emp_no = p_emp_info->emp_no;
     copy->salary = p_emp_info->salary;

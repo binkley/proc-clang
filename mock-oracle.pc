@@ -60,9 +60,9 @@ TEST_DATA(const int n, ...)
 static const data_field_t *
 make_field(const void *p, const size_t len)
 {
-    data_field_t *field = (data_field_t *) malloc(sizeof(data_field_t));
+    data_field_t *field = (data_field_t *) calloc(1, sizeof(data_field_t));
     field->len = len;
-    field->data = malloc(len);
+    field->data = calloc(1, len);
     memcpy(field->data, p, len);
     return field;
 }

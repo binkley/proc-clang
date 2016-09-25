@@ -15,7 +15,7 @@ static const int max = 128;
 static int check_printing(const char *format, ...) {
     va_list ap;
     va_start(ap, format);
-    char* buf = (char *) malloc(max);
+    char* buf = (char *) calloc(1, max);
     int c = vsnprintf(buf, max, format, ap);
     va_end(ap);
     messages[n_messages++] = buf;
