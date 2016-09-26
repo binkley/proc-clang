@@ -114,7 +114,7 @@ _FLOAT(const float f)
 }
 
 static void
-recv_eof(const struct sqlexd *sqlstm)
+receive_eof(const struct sqlexd *sqlstm)
 {
     sqlca.sqlcode = 1403;
 }
@@ -126,7 +126,7 @@ recv_field(void *slot, const data_field_t *field)
 }
 
 static void
-recv_record(struct sqlexd *sqlstm, const data_record_t *record)
+receive_record(struct sqlexd *sqlstm, const data_record_t *record)
 {
     int i = 0;
     data_field_t *current = record->head_field;
@@ -146,9 +146,9 @@ sqlcxt(void **ignored, unsigned int *sqlctx, struct sqlexd *sqlstm,
     else if (!current_record) {
         free_records();
         head_record = 0;
-        recv_eof(sqlstm);
+        receive_eof(sqlstm);
     } else {
-        recv_record(sqlstm, current_record);
+        receive_record(sqlstm, current_record);
         current_record = current_record->next;
     }
 }
