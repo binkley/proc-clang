@@ -8,10 +8,10 @@ $ git submodule update --init  # Run this after cloning this repo
 $ git submodule update --remote  # Run this after pulling this repo
 ```
 
-2. Download the basic software (including library dependencies) from:
+2. Download the basic Oracle software (including library dependencies) from:
    http://www.oracle.com/technetwork/topics/precomp-112010-084940.html
 
-3. Download the SDK (including pre-compiler) from:
+3. Download the Oracle SDK (including pre-compiler) from:
    http://www.oracle.com/technetwork/topics/intel-macsoft-096467.html
 
 4. Unzip the two archives manually.  If you unzip with the MacOS shell, the
