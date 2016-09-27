@@ -30,18 +30,7 @@ $ cd $ICLIBHOME
 $ ln -s libclntsh.dylib.12.1 libclntsh.dylib
 ```
 
-6. Download gtest 1.8.0 (by tag) from:
-   https://github.com/google/googletest/tree/master
-
-7. Install `cmake` with homebrew.
-
-8. Build gtest libraries with:
-
-   ```
-CC=$(which clang) CXX=$(which clang++) cmake BUILD_SHARED_LIBS=ON
-```
-
-9. Install MacOS command-line tools.  By default XCode does not install
+6. Install MacOS command-line tools.  By default XCode does not install
    command line tools, and `proc` cannot find `/usr/include` and friends.  This
    is [an El Capitan
 thing and Sierra](http://superuser.com/questions/995360/missing-usr-include-in-os-x-el-capitan):
@@ -51,12 +40,12 @@ $ xcode-select --install
 $ xcodebuild -license
 ```
 
-10. Install llvm from homebrew.  This gets you `clang`, which is superior to
+7. Install llvm from homebrew.  This gets you `clang`, which is superior to
    `gcc`, command-line compatible, and great for lint-y warnings.  It is also
    what newer versions of XLC (IBM's compiler) are based on, although SWMS is
    using a much older pre-clang version of XLC.
 
-11. Export these:
+8. Export these:
 
     ```
 $ export ICLIBHOME=...  # Needed to build
