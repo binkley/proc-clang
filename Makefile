@@ -19,8 +19,8 @@ check: $(patsubst %-test.c,%-test,$(wildcard *-test.c))
 clean:
 	$(RM) $(patsubst %.pc,%.c,$(wildcard *.pc)) $(patsubst %.pc,%,$(wildcard *.pc)) $(patsubst %-test.c,%-test,$(wildcard *-test.c)) *.o *.lis *.a
 
-ctest.o: CPPFLAGS += -I$(CTEST_HOME)
-%-test.o: CPPFLAGS += -I$(CTEST_HOME)
+ctest.o: CPPFLAGS += -Ictest
+%-test.o: CPPFLAGS += -Ictest
 
 %.c: %.pc
 ifndef ICLIBHOME

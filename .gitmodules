@@ -1,0 +1,4 @@
+[submodule "ctest"]
+	path = ctest
+	url = https://github.com/xianyi/ctest.git
+	branch = master
