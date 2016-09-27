@@ -4,7 +4,8 @@
 
 1. Update submodule for [Xian Yi's ctest fork](https://github.com/xianyi/ctest):
    ```
-$ git submodule update --remote
+$ git submodule update --init  # Run this after cloning this repo
+$ git submodule update --remote  # Run this after pulling this repo
 ```
 
 2. Download the basic software (including library dependencies) from:
