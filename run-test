@@ -2,7 +2,7 @@
 
 export PS4='+${BASH_SOURCE}:${LINENO}: ${FUNCNAME[0]:+${FUNCNAME[0]}(): } '
 
-export LD_LIBRARY_PATH=$ICLIBHOME:$GTEST_ROOT:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=$ICLIBHOME:$LD_LIBRARY_PATH
 
 function setup_colors()
 {
