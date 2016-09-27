@@ -44,7 +44,7 @@ CC=$(which clang) CXX=$(which clang++) cmake BUILD_SHARED_LIBS=ON
 9. Install MacOS command-line tools.  By default XCode does not install
    command line tools, and `proc` cannot find `/usr/include` and friends.  This
    is [an El Capitan
-thing](http://superuser.com/questions/995360/missing-usr-include-in-os-x-el-capitan):
+thing and Sierra](http://superuser.com/questions/995360/missing-usr-include-in-os-x-el-capitan):
 
    ```
 $ xcode-select --install
