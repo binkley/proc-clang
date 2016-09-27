@@ -76,9 +76,7 @@ TURNER        7844  1500.00         0.00
 GOOD-BYE!!
 
 $ make check
-TEST 1/1 OracleLoginUnitTest:LoginTest 
-Connected to ORACLE as user: scott
-[OK]
+TEST 1/1 OracleLoginUnitTest:LoginTest [OK]
 RESULTS: 1 tests (1 ok, 0 failed, 0 skipped) ran in 0 ms
 TEST 1/1 MockOracle:FetchMockData [OK]
 RESULTS: 1 tests (1 ok, 0 failed, 0 skipped) ran in 0 ms

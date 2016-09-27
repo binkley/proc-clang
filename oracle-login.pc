@@ -6,14 +6,22 @@
 
 #include <sqlca.h>
 
+#include "oracle-login.h"
 #include "sql-error.h"
 
 void
 oracle_login(char const *username, char const *password, const char *connect)
 {
+    oracle_login_with(username, password, connect, printf);
+}
+
+void
+oracle_login_with(char const *username, char const *password,
+        const char *connect, printf_t printer)
+{
     EXEC SQL WHENEVER SQLERROR DO sql_error("ORACLE error--");
 
     EXEC SQL CONNECT :username IDENTIFIED BY :password
         USING :connect;
-    printf("\nConnected to ORACLE as user: %s\n", username);
+    printer("\nConnected to ORACLE as user: %s\n", username);
 }

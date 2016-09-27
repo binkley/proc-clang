@@ -12,7 +12,9 @@ static int n_messages;
 
 static const int max = 128;
 
-static int check_printing(const char *format, ...) {
+static int
+check_printing(const char *format, ...)
+{
     va_list ap;
     va_start(ap, format);
     char* buf = (char *) calloc(1, max);
