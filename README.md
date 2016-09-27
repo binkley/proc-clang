@@ -59,7 +59,7 @@ Try:
 ```
 # Build output elided
 $ make all
-$ ./procdemo
+$ ./procdemo <your-server-host-or-ip/your-db>
 
 Connected to ORACLE as user: scott
 
