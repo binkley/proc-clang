@@ -34,4 +34,10 @@ CTEST(MockOracle, FetchMockData) {
     ASSERT_EQUAL(2, p_emp_info->emp_no);
     ASSERT_DBL_NEAR(3.14159f, p_emp_info->salary);
     ASSERT_DBL_NEAR(2.71828f, p_emp_info->commission);
+
+    p_emp_info = employees[1];
+    ASSERT_STR("Mary Jones", p_emp_info->emp_name);
+    ASSERT_EQUAL(6, p_emp_info->emp_no);
+    ASSERT_DBL_NEAR(3.14159f, p_emp_info->salary);
+    ASSERT_DBL_NEAR(2.71828f, p_emp_info->commission);
 }
