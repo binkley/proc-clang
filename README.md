@@ -76,7 +76,6 @@ TURNER        7844  1500.00         0.00
 GOOD-BYE!!
 
 $ make check
-$ make check
 TEST 1/1 OracleLoginUnitTest:LoginTest 
 Connected to ORACLE as user: scott
 [OK]
