@@ -32,12 +32,13 @@ endif
 	$(PROC) $(PROCFLAGS) INAME=$< ONAME=$@
 
 -lprocdemo: libprocdemo.a(sql-error.o emp-info.o oracle-login.o fetch-salesmen.o print-salesmen.o)
--ltesting: libtesting.a(mock-oracle.o ctest.o)
+-lctest: libctest.a(ctest.o)
+-lmock-oracle: libmock-oracle.a(mock-oracle.o)
 
 procdemo: procdemo.o -lprocdemo
 
 define BUILD_test
-$(1): $(1:%=%.o) -lprocdemo -ltesting
+$(1): $(1:%=%.o) -lprocdemo -lmock-oracle -lctest
 endef
 $(foreach t,$(wildcard *-test.c),$(eval $(call BUILD_test,$(t:%.c=%))))
 
