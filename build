@@ -1,0 +1,52 @@
+#!/bin/ksh
+
+set -e
+
+AR=ar
+ARFLAGS=-lrusv
+CC=oraxlc
+CFLAGS=-g
+CPPFLAGS="-I$ORACLE_HOME/include -I$ORACLE_HOME/precomp/public -Ictest"
+LDFLAGS="-L$ORACLE_HOME/lib32 -L."
+LDLIBS="-lclntsh -lprocdemo"
+PROC=proc
+PROCFLAGS="CODE=ANSI_C LINES=YES INCLUDE=$ORACLE_HOME/include INCLUDE=$ORACLE_HOME/precomp/public"
+
+for pc in *.pc
+do
+    c=${pc%.pc}.c
+    $PROC $PROCFLAGS INAME=$pc ONAME=$c
+done
+
+for c in *.c
+do
+    o=${c%.c}.o
+    $CC $CFLAGS $CPPFLAGS -c $c -o ${c%.c}.o
+done
+
+for o in emp-info.o fetch-salesmen.o oracle-login.o print-salesmen.o sql-error.o
+do
+    $AR $ARFLAGS libprocdemo.a $o
+done
+
+for o in ctest.o mock-oracle.o
+do
+    $AR $ARFLAGS libtesting.a $o
+done
+
+for o in procdemo.o
+do
+    x=${o%.o}
+    $CC $CFLAGS $CPPFLAGS $LDFLAGS $TARGET_ARCH $o $LDLIBS -o ${o%.o}
+done
+
+for o in *-test.o
+do
+    x=${o%.o}
+    $CC $CFLAGS $CPPFLAGS $LDFLAGS $TARGET_ARCH $o mock-oracle.o $LDLIBS -o ${o%.o}
+done
+
+for t in *-test
+do
+    ./$t
+done
